@@ -1048,6 +1048,7 @@ function cardHeldStr(person,card){
 // ================================================================
 // ANNOUNCE BAR（月度 + 季度 + 半年 + 年度福利截止提醒）
 // ================================================================
+const _dismissed=new Set();
 function buildAnnounceBar(){
   const bar=document.getElementById('announceBar');
   const today=new Date();
@@ -1073,7 +1074,7 @@ function buildAnnounceBar(){
 
   // Helper：產生一個 announce 區塊 HTML
   function makeSection(dismissKey,typeClass,icon,title,rows){
-    if(sessionStorage.getItem(dismissKey)) return '';
+    if(_dismissed.has(dismissKey)) return '';
     if(!rows.length||rows.every(r=>r.done===r.total)) return '';
     const isEnd=typeClass==='end';
     const rowsHtml=rows.map(r=>{
@@ -1138,7 +1139,7 @@ function buildAnnounceBar(){
 }
 
 function dismissAnnounce(key){
-  sessionStorage.setItem(key,'1');
+  _dismissed.add(key);
   buildAnnounceBar();
 }
 
@@ -1186,7 +1187,7 @@ function buildFeeReminderBar(){
 
   const today=new Date();
   const dismissKey=`fee_rem_${today.getFullYear()}_${today.getMonth()+1}`;
-  if(sessionStorage.getItem(dismissKey)){bar.innerHTML='';return;}
+  if(_dismissed.has(dismissKey)){bar.innerHTML='';return;}
 
   const urgent=reminders.some(r=>r.days<=14);
 
@@ -1214,7 +1215,7 @@ function buildFeeReminderBar(){
 }
 
 function dismissFeeRemind(key){
-  sessionStorage.setItem(key,'1');
+  _dismissed.add(key);
   document.getElementById('feeRemindBar').innerHTML='';
 }
 
