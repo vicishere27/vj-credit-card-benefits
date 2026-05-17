@@ -384,6 +384,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
     <button class="vt-btn active" id="vtPerson" onclick="setViewMode('person')">👤 按人</button>
     <button class="vt-btn" id="vtCard" onclick="setViewMode('card')">💳 按卡</button>
     <button class="vt-btn" id="vtLog" onclick="setViewMode('log')">📋 紀錄</button>
+    <button class="vt-btn" id="vtFee" onclick="setViewMode('fee')">💰 年費</button>
   </div>
   <button class="icon-btn" onclick="openModal('settings')" title="設定">⚙️</button>
 </div>
@@ -430,6 +431,9 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   </button>
   <button class="bnav-btn" id="bnavLog" onclick="setViewMode('log')">
     <span class="bnav-icon">⊞</span>紀錄
+  </button>
+  <button class="bnav-btn" id="bnavFee" onclick="setViewMode('fee')">
+    <span class="bnav-icon">💰</span>年費
   </button>
   <button class="bnav-btn" id="bnavSettings" onclick="openModal('settings')">
     <span class="bnav-icon">◎</span>設定
@@ -827,9 +831,11 @@ function setViewMode(mode){
   document.getElementById('vtPerson').classList.toggle('active',mode==='person');
   document.getElementById('vtCard').classList.toggle('active',mode==='card');
   document.getElementById('vtLog').classList.toggle('active',mode==='log');
+  document.getElementById('vtFee').classList.toggle('active',mode==='fee');
   document.getElementById('bnavPerson').classList.toggle('active',mode==='person');
   document.getElementById('bnavCard').classList.toggle('active',mode==='card');
   document.getElementById('bnavLog').classList.toggle('active',mode==='log');
+  document.getElementById('bnavFee').classList.toggle('active',mode==='fee');
   render();
 }
 
@@ -1224,13 +1230,15 @@ function render(){
   document.getElementById('vtPerson').classList.toggle('active',S.viewMode==='person');
   document.getElementById('vtCard').classList.toggle('active',S.viewMode==='card');
   document.getElementById('vtLog').classList.toggle('active',S.viewMode==='log');
+  document.getElementById('vtFee').classList.toggle('active',S.viewMode==='fee');
   document.getElementById('bnavPerson').classList.toggle('active',S.viewMode==='person');
   document.getElementById('bnavCard').classList.toggle('active',S.viewMode==='card');
   document.getElementById('bnavLog').classList.toggle('active',S.viewMode==='log');
+  document.getElementById('bnavFee').classList.toggle('active',S.viewMode==='fee');
   buildPersonTabs();
   buildFreqPills();
   buildAnnounceBar();
-  buildFeeReminderBar();
+  document.getElementById('feeRemindBar').innerHTML='';
 
   const visible=BENEFITS.filter(isVisible);
 
@@ -1254,6 +1262,8 @@ function render(){
     renderCardView(visible);
   }else if(S.viewMode==='log'){
     renderLogView();
+  }else if(S.viewMode==='fee'){
+    renderFeeView();
   }else{
     renderPersonView(visible);
   }
@@ -1702,6 +1712,85 @@ function logUndo(key,bId,e){
   save();
   if(S.scriptUrl)pushSync(key,null);
   render();
+}
+
+function renderFeeView(){
+  const main=document.getElementById('main');
+  main.innerHTML='';
+  const todayStr=new Date().toISOString().slice(0,10);
+  const seen=new Set();
+  const cards=[];
+
+  BENEFITS.forEach(b=>{
+    const pk=`${b.person}::${b.card}`;
+    if(seen.has(pk)) return;
+    seen.add(pk);
+    const info=CARD_INFO[b.card];
+    if(!info||!info.fee) return;
+    const st=S.cardStatus[pk];
+    if(st&&st.openDate&&st.openDate>todayStr) return;
+    if(st&&st.closeDate&&st.closeDate<todayStr) return;
+    const openDate=(st&&st.openDate)||null;
+    const ann=openDate?calcNextAnniversary(openDate):null;
+    const days=ann?daysUntil(ann):null;
+    cards.push({person:b.person,card:b.card,fee:info.fee,grad:info.grad,openDate,ann,days});
+  });
+
+  cards.sort((a,b)=>{
+    if(a.days===null&&b.days===null) return 0;
+    if(a.days===null) return 1;
+    if(b.days===null) return -1;
+    return a.days-b.days;
+  });
+
+  const wrap=document.createElement('div');
+  wrap.style.cssText='padding:14px 16px;display:flex;flex-direction:column;gap:10px';
+
+  // Group: urgent ≤14d, soon ≤60d, later >60d / no date
+  const groups=[
+    {label:'🔴 緊急（14天內）',clr:'#ef4444',items:cards.filter(c=>c.days!==null&&c.days<=14)},
+    {label:'🟡 即將到期（15–60天）',clr:'#f59e0b',items:cards.filter(c=>c.days!==null&&c.days>14&&c.days<=60)},
+    {label:'⚪ 其他卡片',clr:'var(--muted)',items:cards.filter(c=>c.days===null||c.days>60)},
+  ].filter(g=>g.items.length>0);
+
+  groups.forEach(g=>{
+    const hd=document.createElement('div');
+    hd.style.cssText=`font-size:11px;font-weight:800;letter-spacing:.5px;color:${g.clr};padding:4px 2px 2px`;
+    hd.textContent=g.label;
+    wrap.appendChild(hd);
+
+    g.items.forEach(c=>{
+      const row=document.createElement('div');
+      row.style.cssText=`display:flex;align-items:center;gap:12px;padding:12px 14px;
+        background:rgba(255,255,255,.04);border-radius:12px;border:1px solid rgba(255,255,255,.07)`;
+
+      const dotClass=`dot-${c.person.toLowerCase()}`;
+      const daysStr=c.days===null?'—':c.days===0?'今天！':`${c.days} 天後`;
+      const dateStr=c.ann?c.ann.toLocaleDateString('zh-TW',{month:'long',day:'numeric'}):'—';
+      const urgClr=c.days===null?'var(--muted)':c.days<=14?'#ef4444':c.days<=60?'#f59e0b':'var(--muted)';
+
+      row.innerHTML=`
+        <div style="width:6px;height:44px;border-radius:4px;background:${c.grad||'var(--border)'};flex-shrink:0"></div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.card}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;display:flex;align-items:center;gap:6px">
+            <span class="dot ${dotClass}"></span>${c.person}
+            ${c.openDate?`<span style="color:var(--muted)">· 開卡 ${c.openDate}</span>`:''}
+          </div>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="font-size:15px;font-weight:900;color:#fbbf24">$${c.fee.toLocaleString()}</div>
+          <div style="font-size:11px;color:${urgClr};font-weight:700;margin-top:2px">${dateStr}（${daysStr}）</div>
+        </div>`;
+      wrap.appendChild(row);
+    });
+  });
+
+  if(!cards.length){
+    wrap.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)">沒有年費資料</div>';
+  }
+
+  main.appendChild(wrap);
 }
 
 function renderLogView(){
