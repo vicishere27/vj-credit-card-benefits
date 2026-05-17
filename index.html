@@ -1,0 +1,1477 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>家族信用卡福利</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080c14;--card:#0f1623;--border:rgba(255,255,255,0.08);--text:#e2e8f0;--muted:#64748b;
+  --accent:#6366f1;--done:#22c55e;--warn:#f59e0b;--danger:#ef4444;
+  --monthly:#f59e0b;--quarterly:#8b5cf6;--semi:#3b82f6;--annual:#10b981;
+  --radius:12px;
+}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
+
+/* ---- HEADER ---- */
+.header{background:var(--card);border-bottom:1px solid var(--border);padding:0 20px;height:54px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100}
+.header h1{font-size:15px;font-weight:800;white-space:nowrap;letter-spacing:-.3px;display:flex;align-items:center;gap:8px}
+.header-divider{width:1px;height:22px;background:var(--border);flex-shrink:0}
+.person-tabs{display:flex;gap:3px;flex:1;min-width:0;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.person-tabs::-webkit-scrollbar{display:none}
+.person-tab{display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:8px;border:1px solid transparent;background:transparent;color:var(--muted);cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;white-space:nowrap;transition:.15s}
+.person-tab:hover{background:rgba(255,255,255,.05);color:var(--text)}
+.person-tab.active{background:rgba(99,102,241,.15);color:var(--accent);border-color:rgba(99,102,241,.25)}
+.dot{width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0}
+.dot-vic{background:#6366f1}.dot-jenny{background:#ec4899}.dot-qbq{background:#f59e0b}.dot-amber{background:#10b981}
+.icon-btn{width:34px;height:34px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:.15s;flex-shrink:0}
+.icon-btn:hover{background:rgba(255,255,255,.06);color:var(--text);border-color:rgba(255,255,255,.15)}
+.view-toggle{display:flex;gap:2px;background:var(--bg);padding:3px;border-radius:8px;flex-shrink:0}
+.vt-btn{padding:5px 11px;border-radius:6px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;transition:.15s;white-space:nowrap}
+.vt-btn.active{background:var(--card);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.5)}
+
+/* ---- FILTER BAR ---- */
+.filter-bar{background:var(--card);border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.freq-pills{display:flex;gap:4px;background:var(--bg);padding:3px;border-radius:8px}
+.freq-pill{padding:5px 13px;border-radius:6px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;transition:.15s}
+.freq-pill.active{background:var(--card);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.5)}
+.freq-pill:hover:not(.active){color:var(--text)}
+.period-nav{display:flex;align-items:center;gap:6px;margin-left:auto}
+.nav-btn{width:30px;height:30px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:.15s}
+.nav-btn:hover{background:var(--border)}
+.period-lbl{font-size:13px;font-weight:700;min-width:110px;text-align:center}
+.today-btn{padding:5px 11px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:11px;font-weight:600;transition:.15s}
+.today-btn:hover{background:var(--border);color:var(--text)}
+
+/* ---- STATS ---- */
+.stats{padding:10px 20px;display:flex;gap:6px;align-items:center;border-bottom:1px solid var(--border);flex-wrap:wrap;background:var(--card)}
+.stat{display:flex;flex-direction:column;gap:2px;padding:8px 12px;background:var(--bg);border-radius:10px;border:1px solid var(--border);min-width:78px}
+.stat-val{font-size:17px;font-weight:800;letter-spacing:-.5px;line-height:1}
+.stat-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;font-weight:600}
+.progress-wrap{flex:1;min-width:120px;display:flex;flex-direction:column;gap:5px;padding:8px 12px;background:var(--bg);border-radius:10px;border:1px solid var(--border)}
+.prog-header{display:flex;justify-content:space-between;align-items:center}
+.prog-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;font-weight:600}
+.prog-track{height:6px;background:rgba(255,255,255,.07);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--done));border-radius:4px;transition:width .5s ease}
+.prog-pct{font-size:13px;font-weight:800;letter-spacing:-.3px}
+
+/* ---- MAIN (person view) ---- */
+.main{padding:20px;max-width:1200px;margin:0 auto}
+.freq-section{margin-bottom:28px}
+.section-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.freq-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 11px;border-radius:20px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px}
+.badge-monthly{background:rgba(245,158,11,.2);color:var(--monthly)}
+.badge-quarterly{background:rgba(139,92,246,.2);color:var(--quarterly)}
+.badge-semi{background:rgba(59,130,246,.2);color:var(--semi)}
+.badge-annual{background:rgba(16,185,129,.2);color:var(--annual)}
+.section-sub{font-size:12px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px}
+
+/* ---- BENEFIT CARD ---- */
+.bcard{background:var(--card);border:1px solid var(--border);border-left:3px solid rgba(255,255,255,.1);border-radius:var(--radius);padding:15px;cursor:pointer;position:relative;overflow:hidden;transition:.15s}
+.bcard:hover{border-color:rgba(99,102,241,.35);border-left-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.bcard.done{border-left-color:var(--done);background:rgba(34,197,94,.03)}
+.bcard-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:9px}
+.bcard-meta{flex:1;min-width:0}
+.bcard-who{font-size:10px;color:var(--muted);font-weight:600;display:flex;align-items:center;gap:5px;margin-bottom:3px}
+.bcard-name{font-size:14px;font-weight:700;line-height:1.3}
+.bcard-card{font-size:11px;color:var(--muted);margin-top:2px}
+.amount{font-size:20px;font-weight:900;color:#4ade80;white-space:nowrap;margin-left:10px;flex-shrink:0}
+.amount.nm{font-size:13px;color:var(--warn)}
+.bcard-notes{font-size:11px;color:var(--muted);line-height:1.5;margin-top:7px}
+.tag{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700;margin-top:5px;margin-right:4px}
+.tag-warn{background:rgba(239,68,68,.12);color:#f87171}
+.tag-auto{background:rgba(16,185,129,.12);color:#34d399}
+.bcard-foot{margin-top:11px;padding-top:11px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.complete-btn{display:flex;align-items:center;gap:6px;padding:7px 13px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;transition:.15s}
+.complete-btn:hover{border-color:var(--done);color:var(--done);background:rgba(34,197,94,.06)}
+.bcard.done .complete-btn{background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.4);color:var(--done)}
+.done-info{font-size:10px;color:var(--muted);text-align:right;line-height:1.5}
+
+/* ---- CARD VIEW ---- */
+.cc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;padding:20px;max-width:1200px;margin:0 auto}
+.cc-item{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:.2s}
+.cc-item:hover{border-color:rgba(99,102,241,.35);box-shadow:0 12px 36px rgba(0,0,0,.4),0 0 0 1px rgba(99,102,241,.15)}
+.cc-tile{position:relative;width:100%;aspect-ratio:85.6/54;overflow:hidden;cursor:pointer;user-select:none}
+.cc-tile-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .25s ease}
+.cc-item:hover .cc-tile-img{transform:scale(1.04)}
+.cc-tile-grad{width:100%;height:100%}
+.cc-tile-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0) 30%,rgba(0,0,0,.82) 100%);padding:12px 14px;display:flex;flex-direction:column;justify-content:flex-end;gap:3px}
+.cc-tile-name{font-size:14px;font-weight:800;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.8);line-height:1.2;letter-spacing:-.2px}
+.cc-tile-person{font-size:10px;color:rgba(255,255,255,.85);font-weight:600;display:flex;align-items:center;gap:5px;text-transform:uppercase;letter-spacing:.4px}
+.cc-tile-badge{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.55);backdrop-filter:blur(8px);border-radius:8px;padding:4px 10px;font-size:11px;font-weight:800;color:#fff;letter-spacing:.2px}
+.cc-item.all-done .cc-tile-badge{background:rgba(34,197,94,.6);color:#fff}
+
+/* ROI bar */
+.cc-roi{padding:10px 14px;border-top:1px solid var(--border);background:rgba(0,0,0,.2)}
+.cc-roi-stats{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:7px;align-items:center}
+.cc-roi-item{display:flex;flex-direction:column;gap:2px}
+.cc-roi-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.cc-roi-val{font-size:12px;font-weight:800;letter-spacing:-.3px}
+.cc-roi-track{flex:1;min-width:50px;height:4px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden;align-self:center}
+.cc-roi-fill{height:100%;border-radius:3px;transition:width .5s ease}
+.cc-roi-pct{font-size:11px;font-weight:800;white-space:nowrap}
+
+/* Accordion summary */
+.cc-summary{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;cursor:pointer;gap:8px;transition:background .15s}
+.cc-summary:hover{background:rgba(255,255,255,.03)}
+.cc-summary-info{flex:1;min-width:0}
+.cc-summary-count{font-size:12px;color:var(--muted);font-weight:500}
+.cc-summary-val{font-size:13px;font-weight:800;color:var(--done);letter-spacing:-.3px}
+.cc-chevron{color:var(--muted);font-size:11px;transition:transform .22s ease;flex-shrink:0}
+.cc-item.open .cc-chevron{transform:rotate(180deg)}
+.cc-acc{display:none;border-top:1px solid var(--border)}
+.cc-item.open .cc-acc{display:block}
+.cc-acc-freq-hd{padding:6px 14px 4px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);background:rgba(0,0,0,.25)}
+.cc-acc-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer;transition:background .12s}
+.cc-acc-row:last-child{border-bottom:none}
+.cc-acc-row:hover{background:rgba(99,102,241,.07)}
+.cc-acc-row.done{background:rgba(34,197,94,.04)}
+.cc-acc-row.done:hover{background:rgba(34,197,94,.08)}
+.cc-check{width:20px;height:20px;border-radius:50%;border:1.5px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;transition:.15s}
+.cc-acc-row.done .cc-check{border-color:var(--done);background:rgba(34,197,94,.2);color:var(--done)}
+.cc-acc-info{flex:1;min-width:0}
+.cc-acc-name{font-size:13px;font-weight:600;line-height:1.3}
+.cc-acc-row.done .cc-acc-name{color:var(--muted);text-decoration:line-through;text-decoration-color:rgba(34,197,94,.4)}
+.cc-acc-sub{font-size:10px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cc-acc-right{display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex-shrink:0}
+.cc-acc-amt{font-size:14px;font-weight:800;color:var(--done);letter-spacing:-.3px}
+.cc-acc-amt.nm{font-size:11px;color:var(--warn)}
+.cc-acc-done-info{font-size:9px;color:var(--muted)}
+.cc-acc-tag{display:inline-flex;padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;background:rgba(239,68,68,.12);color:#f87171;margin-top:3px}
+.cc-acc-tag-auto{background:rgba(34,197,94,.12);color:#34d399}
+
+/* ---- EMPTY ---- */
+.empty{text-align:center;padding:60px 20px;color:var(--muted)}
+.empty h3{font-size:16px;margin-bottom:6px;color:var(--text)}
+
+/* ---- MODAL ---- */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:20px}
+.overlay.open{display:flex}
+.modal{background:var(--card);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:24px;width:480px;max-width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,.6)}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.modal-head h2{font-size:16px;font-weight:800;letter-spacing:-.3px}
+.modal-close{width:28px;height:28px;border-radius:7px;background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--muted);cursor:pointer;font-size:16px;line-height:1;display:flex;align-items:center;justify-content:center;transition:.15s}
+.modal-close:hover{background:rgba(239,68,68,.12);color:var(--danger);border-color:rgba(239,68,68,.3)}
+.info-box{padding:12px 14px;background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.2);border-radius:10px;font-size:12px;color:#a5b4fc;margin-bottom:16px;line-height:1.7}
+.info-box a{color:#818cf8;font-weight:600}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:10px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;font-weight:700}
+.form-group input{width:100%;padding:10px 13px;background:var(--bg);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:inherit;font-size:13px;outline:none;transition:.15s;color-scheme:dark}
+.form-group input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(99,102,241,.15)}
+.form-group input::placeholder{color:var(--muted)}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.btn{display:flex;align-items:center;gap:6px;padding:9px 16px;border-radius:9px;border:none;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:.15s}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:#4f46e5;transform:translateY(-1px);box-shadow:0 4px 12px rgba(99,102,241,.4)}
+.btn-secondary{background:rgba(255,255,255,.06);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.15)}
+.sync-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;font-size:11px;font-weight:600;margin-top:12px}
+.sync-ok{background:rgba(34,197,94,.12);color:var(--done)}
+.sync-err{background:rgba(239,68,68,.12);color:var(--danger)}
+.sync-ing{background:rgba(99,102,241,.12);color:var(--accent)}
+.steps{font-size:12px;color:var(--muted);padding-left:18px;line-height:2.3;margin-top:10px}
+.steps code{background:var(--bg);padding:2px 6px;border-radius:4px;font-size:11px;color:#a5b4fc}
+
+/* ---- LOG / CALENDAR VIEW ---- */
+.log-wrap{padding:20px;max-width:1100px;margin:0 auto;display:grid;grid-template-columns:310px 1fr;gap:20px;align-items:start}
+.cal-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;position:sticky;top:140px}
+.cal-head{display:flex;align-items:center;justify-content:space-between;padding:13px 14px;border-bottom:1px solid var(--border)}
+.cal-head h3{font-size:13px;font-weight:800}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr)}
+.cal-dow{text-align:center;font-size:9px;font-weight:700;color:var(--muted);padding:6px 0;text-transform:uppercase;letter-spacing:.3px}
+.cal-day{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2px;border-radius:6px;transition:.12s;gap:1px}
+.cal-day.has-events{cursor:pointer}
+.cal-day.has-events:hover{background:rgba(99,102,241,.12)}
+.cal-day.selected{background:var(--accent)}
+.cal-day.today .cal-dn{color:var(--accent);font-weight:900}
+.cal-day.selected .cal-dn{color:#fff}
+.cal-dn{font-size:11px;font-weight:600;line-height:1}
+.cal-day.other-month .cal-dn{color:var(--border)}
+.cal-dots{display:flex;gap:1px;flex-wrap:wrap;justify-content:center;max-width:22px}
+.cal-dot{width:4px;height:4px;border-radius:50%}
+.cal-legend{padding:8px 12px;border-top:1px solid var(--border);display:flex;gap:10px;flex-wrap:wrap}
+.cal-legend-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--muted)}
+.log-col{min-width:0}
+.log-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:8px}
+.log-hd-title{font-size:15px;font-weight:800}
+.log-clear{padding:4px 10px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:11px;font-weight:600;transition:.12s}
+.log-clear:hover{background:var(--border);color:var(--text)}
+.log-day-group{margin-bottom:20px}
+.log-day-hd{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;padding-bottom:6px;border-bottom:1px solid var(--border);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between}
+.log-day-total{font-size:11px;color:#4ade80;font-weight:700}
+.log-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;flex-shrink:0}
+.log-info{flex:1;min-width:0}
+.log-name{font-size:13px;font-weight:700;line-height:1.3}
+.log-sub{font-size:10px;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.log-right{display:flex;flex-direction:column;align-items:flex-end;gap:1px;flex-shrink:0}
+.log-amt{font-size:14px;font-weight:900;color:#4ade80}
+.log-amt.nm{font-size:11px;color:var(--warn)}
+.log-time{font-size:9px;color:var(--muted)}
+.log-empty{text-align:center;padding:40px 20px;color:var(--muted);font-size:13px}
+.log-filter-bar{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.log-filter-row{display:flex;gap:4px;flex-wrap:wrap}
+.log-fp{padding:4px 11px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:11px;font-weight:600;transition:.12s;display:flex;align-items:center;gap:4px;white-space:nowrap}
+.log-fp:hover{border-color:var(--accent);color:var(--text)}
+.log-fp.lf-active{background:var(--accent);border-color:var(--accent);color:#fff}
+.log-row{display:flex;align-items:center;gap:10px;padding:11px 13px;background:var(--card);border:1px solid var(--border);border-left-width:3px;border-radius:10px;margin-bottom:6px;transition:.15s}
+.log-row:hover{transform:translateX(2px)}
+.log-undo-btn{width:28px;height:28px;border-radius:6px;border:1px solid transparent;background:transparent;color:var(--muted);cursor:pointer;font-size:14px;transition:.15s;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.log-undo-btn:hover{border-color:var(--danger);color:var(--danger);background:rgba(239,68,68,.1)}
+.log-card-badge{display:inline-block;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:700;vertical-align:middle}
+/* ---- CARD MGMT ---- */
+.cmgmt-group{margin-bottom:18px}
+.cmgmt-person-hd{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.cmgmt-row{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px}
+.cmgmt-row-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.cmgmt-card-name{font-size:13px;font-weight:700;flex:1;letter-spacing:-.2px}
+.cmgmt-status{padding:3px 9px;border-radius:6px;font-size:10px;font-weight:700}
+.cmgmt-active{background:rgba(34,197,94,.15);color:var(--done)}
+.cmgmt-closing{background:rgba(245,158,11,.15);color:var(--warn)}
+.cmgmt-closed{background:rgba(239,68,68,.15);color:var(--danger)}
+.cmgmt-dates{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cmgmt-field label{display:block;font-size:9px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.cmgmt-field input{width:100%;padding:7px 10px;background:var(--card);border:1px solid var(--border);border-radius:7px;color:var(--text);font-family:inherit;font-size:12px;outline:none;transition:.15s;color-scheme:dark}
+.cmgmt-field input:focus{border-color:var(--accent)}
+.cmgmt-actions{display:flex;gap:6px;margin-top:10px}
+.cmgmt-btn{padding:5px 12px;border-radius:7px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-family:inherit;font-size:11px;font-weight:600;transition:.15s}
+.cmgmt-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
+.cmgmt-btn-danger{border-color:transparent;color:#f87171}
+.cmgmt-btn-danger:hover{border-color:var(--danger);background:rgba(239,68,68,.1);color:var(--danger)}
+.cmgmt-btn-save{border-color:rgba(99,102,241,.35);color:var(--accent)}
+.cmgmt-btn-save:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+@media(max-width:800px){
+  .log-wrap{grid-template-columns:1fr;gap:16px}
+  .cal-card{position:static}
+}
+@media(max-width:640px){
+  body{padding-bottom:66px}
+  .bottom-nav{display:flex}
+  .view-toggle{display:none}
+  .header{padding:0 12px}
+  .header-divider{display:none}
+  .main{padding:14px 12px}
+  .stats{padding:8px 12px;gap:5px}
+  .stat{padding:7px 10px;min-width:68px}
+  .stat-val{font-size:15px}
+  .grid{grid-template-columns:1fr}
+  .cc-grid{grid-template-columns:1fr 1fr;gap:10px;padding:12px}
+  .cc-tile-name{font-size:12px}
+  .cc-acc-name{font-size:12px}
+  .log-wrap{padding:14px 12px}
+  .filter-bar{padding:8px 12px;gap:8px}
+}
+@media(max-width:400px){
+  .cc-grid{grid-template-columns:1fr}
+  .person-tab{padding:5px 9px;font-size:12px}
+  .stats{flex-wrap:nowrap;overflow-x:auto;padding-bottom:6px}
+}
+
+/* ---- BOTTOM NAV ---- */
+.bottom-nav{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--card);
+  border-top:1px solid var(--border);
+  z-index:100;
+  height:58px;
+  align-items:center;
+  justify-content:space-around;
+  padding:0 4px;
+  padding-bottom:env(safe-area-inset-bottom,0);
+}
+.bnav-btn{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:3px;padding:8px 0;
+  border:none;border-radius:10px;
+  background:transparent;color:var(--muted);
+  cursor:pointer;font-family:inherit;font-size:10px;font-weight:600;
+  transition:color .15s;
+}
+.bnav-btn.active{color:var(--accent)}
+.bnav-btn:hover:not(.active){color:var(--text)}
+.bnav-icon{font-size:18px;line-height:1}
+
+/* ---- SCROLLBAR ---- */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:10px}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.2)}
+
+/* ---- EMPTY STATE ---- */
+.empty{text-align:center;padding:72px 20px;color:var(--muted)}
+.empty-icon{width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:20px;margin:0 auto 14px}
+.empty h3{font-size:15px;font-weight:700;margin-bottom:6px;color:var(--text);letter-spacing:-.2px}
+.empty p{font-size:13px;line-height:1.6}
+
+/* ---- CALENDAR FIX ---- */
+.cal-day.other-month .cal-dn{color:#2a3347}
+.log-day-total{font-size:11px;color:var(--done);font-weight:800}
+.log-amt{font-size:14px;font-weight:800;color:var(--done);letter-spacing:-.3px}
+
+/* ---- SECTION HEAD ---- */
+.section-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.freq-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.section-sub{font-size:12px;color:var(--muted);font-weight:500}
+
+/* ---- NAV BTN ---- */
+.nav-btn{width:30px;height:30px;border-radius:7px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:.15s}
+.nav-btn:hover{background:rgba(255,255,255,.06);color:var(--text);border-color:rgba(255,255,255,.15)}
+</style>
+</head>
+<body>
+
+<!-- ==================== HEADER ==================== -->
+<div class="header">
+  <h1>💳 家族福利</h1>
+  <div class="header-divider"></div>
+  <div class="person-tabs" id="personTabs"></div>
+  <div class="view-toggle">
+    <button class="vt-btn active" id="vtPerson" onclick="setViewMode('person')">按人</button>
+    <button class="vt-btn" id="vtCard" onclick="setViewMode('card')">按卡</button>
+    <button class="vt-btn" id="vtLog" onclick="setViewMode('log')">紀錄</button>
+  </div>
+  <button class="icon-btn" onclick="openModal('settings')" title="設定">⚙️</button>
+</div>
+
+<!-- ==================== FILTER BAR ==================== -->
+<div class="filter-bar">
+  <div class="freq-pills" id="freqPills"></div>
+  <div class="period-nav">
+    <button class="nav-btn" onclick="movePeriod(-1)">←</button>
+    <span class="period-lbl" id="periodLbl"></span>
+    <button class="nav-btn" onclick="movePeriod(1)">→</button>
+    <button class="today-btn" onclick="goToday()">今天</button>
+  </div>
+</div>
+
+<!-- ==================== STATS ==================== -->
+<div class="stats">
+  <div class="stat"><span class="stat-val" id="sCompleted">-</span><span class="stat-lbl">完成率</span></div>
+  <div class="stat"><span class="stat-val" id="sEarned" style="color:var(--done)">$0</span><span class="stat-lbl">已獲得</span></div>
+  <div class="stat"><span class="stat-val" id="sPending" style="color:var(--warn)">$0</span><span class="stat-lbl">待使用</span></div>
+  <div class="progress-wrap">
+    <div class="prog-header">
+      <span class="prog-label">本期進度</span>
+      <span class="prog-pct" id="progPct">0%</span>
+    </div>
+    <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+  </div>
+</div>
+
+<!-- ==================== MAIN ==================== -->
+<div id="main"></div>
+
+<!-- ==================== BOTTOM NAV (mobile) ==================== -->
+<nav class="bottom-nav" id="bottomNav">
+  <button class="bnav-btn active" id="bnavPerson" onclick="setViewMode('person')">
+    <span class="bnav-icon">☰</span>按人
+  </button>
+  <button class="bnav-btn" id="bnavCard" onclick="setViewMode('card')">
+    <span class="bnav-icon">▤</span>按卡
+  </button>
+  <button class="bnav-btn" id="bnavLog" onclick="setViewMode('log')">
+    <span class="bnav-icon">⊞</span>紀錄
+  </button>
+  <button class="bnav-btn" id="bnavSettings" onclick="openModal('settings')">
+    <span class="bnav-icon">◎</span>設定
+  </button>
+</nav>
+
+<!-- ==================== CARD MANAGEMENT MODAL ==================== -->
+<div class="overlay" id="modal-cardMgmt">
+  <div class="modal" style="width:620px">
+    <div class="modal-head">
+      <h2>🗂 信用卡開關卡管理</h2>
+      <button class="modal-close" onclick="closeModal('cardMgmt')">✕</button>
+    </div>
+    <div class="info-box" style="margin-bottom:14px">
+      設定每張卡的<strong>開卡日</strong>和<strong>關卡日</strong>，關卡日後的期間福利會自動隱藏。<br>
+      若有設定 Apps Script URL，變更會即時同步到 Google Sheets <code>CardStatus</code> 分頁。
+    </div>
+    <div id="cardMgmtList"></div>
+    <div class="btn-row" style="margin-top:16px">
+      <button class="btn btn-secondary" onclick="closeModal('cardMgmt')">關閉</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== COMPLETE DATE MODAL ==================== -->
+<div class="overlay" id="modal-completeDate">
+  <div class="modal" style="width:340px">
+    <div class="modal-head">
+      <h2>📅 記錄完成日期</h2>
+      <button class="modal-close" onclick="cancelComplete()">✕</button>
+    </div>
+    <div id="completeDateBenefit" style="background:rgba(99,102,241,.1);border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:13px;font-weight:700"></div>
+    <div class="info-box" id="completeDateHint" style="margin-bottom:14px;display:none"></div>
+    <div class="form-group">
+      <label>實際完成日期</label>
+      <input type="date" id="completeDateInput">
+    </div>
+    <div class="form-group">
+      <label>完成者</label>
+      <input type="text" id="completePersonInput" placeholder="Vic">
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="confirmComplete()">✅ 確認完成</button>
+      <button class="btn btn-secondary" onclick="cancelComplete()">取消</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SETTINGS MODAL ==================== -->
+<div class="overlay" id="modal-settings">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>⚙️ 設定</h2>
+      <button class="modal-close" onclick="closeModal('settings')">✕</button>
+    </div>
+    <div class="info-box">
+      📡 <strong>多人同步：</strong>部署 Google Apps Script 後填入 URL，所有家人開同一份 HTML 就能同步完成狀態。<br>
+      <a href="javascript:void(0)" onclick="toggleInstructions()">查看 5 步驟設定說明 ▸</a>
+    </div>
+    <div id="instructions" style="display:none;margin-bottom:16px;padding:14px;background:var(--bg);border-radius:8px;border:1px solid var(--border)">
+      <strong style="font-size:12px">設定步驟：</strong>
+      <ol class="steps">
+        <li>打開 <a href="https://script.google.com" target="_blank" style="color:#818cf8">script.google.com</a> → 新增專案</li>
+        <li>把 <code>apps-script.js</code> 的程式碼完整貼入</li>
+        <li>第一行修改 <code>SHEET_ID</code> 為你的試算表 ID：<br><code style="word-break:break-all">1PhCvipzoZi-zDI4YXy-jGo16fLvQ9yPWDKfwL9Aat_8</code></li>
+        <li>點「部署」→「新增部署」→「網頁應用程式」<br>執行身份：<strong>我</strong>｜存取者：<strong>所有人</strong></li>
+        <li>複製部署 URL → 貼到下方欄位</li>
+      </ol>
+    </div>
+    <div class="form-group">
+      <label>Google Apps Script URL（選填，用於多人同步）</label>
+      <input type="text" id="inputUrl" placeholder="https://script.google.com/macros/s/...">
+    </div>
+    <div class="form-group">
+      <label>你的名稱（記錄是誰完成的）</label>
+      <input type="text" id="inputName" placeholder="Vic">
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="saveSettings()">儲存</button>
+      <button class="btn btn-secondary" onclick="syncNow()">🔄 立即同步</button>
+      <button class="btn btn-secondary" onclick="exportData()">📤 匯出</button>
+      <button class="btn btn-secondary" onclick="importData()">📥 匯入</button>
+    </div>
+    <div id="syncStatus"></div>
+    <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
+      <button class="btn btn-secondary" style="width:100%" onclick="openCardMgmt()">🗂 信用卡開關卡管理 →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ================================================================
+// CARD INFO (images + gradient fallbacks)
+// ================================================================
+const CARD_INFO = {
+  'Amex Gold':{
+    img:'https://upgradedpoints.com/wp-content/uploads/2018/10/Amex-Gold-Card-Art-Solo.jpg',
+    grad:'linear-gradient(135deg,#7a5010 0%,#b8820e 40%,#e8c24a 70%,#b8820e 100%)',
+    clr:'#c9960f', fee:325
+  },
+  'Amex Marriott Brilliant':{
+    img:'https://upgradedpoints.com/wp-content/uploads/2020/08/Marriott-Bonvoy-Brilliant-9222022.png',
+    grad:'linear-gradient(135deg,#2c1654 0%,#6a2580 50%,#9c4dca 100%)',
+    clr:'#8b44cc', fee:650
+  },
+  'Amex Hilton Surpass #1':{
+    img:null,
+    grad:'linear-gradient(135deg,#002B5B 0%,#0052a5 60%,#2b8fd4 100%)',
+    clr:'#0052a5', fee:150
+  },
+  'Amex Hilton Surpass #2 NLL':{
+    img:null,
+    grad:'linear-gradient(135deg,#003366 0%,#005cb8 60%,#2b8fd4 100%)',
+    clr:'#005cb8', fee:150
+  },
+  'Amex Hilton Aspire':{
+    img:'https://upgradedpoints.com/wp-content/uploads/2020/06/hilton-honors-aspire-MConverter.eu_.jpg',
+    grad:'linear-gradient(135deg,#0a0a1a 0%,#1a1a3e 50%,#2d2d6e 100%)',
+    clr:'#4a4aaa', fee:550
+  },
+  'Amex Green':{
+    img:null,
+    grad:'linear-gradient(135deg,#1a5f3f 0%,#2e8b57 60%,#3dbb76 100%)',
+    clr:'#2e8b57', fee:150
+  },
+  'Chase Freedom Flex':{
+    img:null,
+    grad:'linear-gradient(135deg,#003087 0%,#0063BE 60%,#4da6ff 100%)',
+    clr:'#0063BE', fee:0
+  },
+  'Chase Sapphire Reserve':{
+    img:'https://upgradedpoints.com/wp-content/uploads/2025/06/Sapphire-Reserve.png',
+    grad:'linear-gradient(135deg,#1c1c1c 0%,#3a3a3a 50%,#5c5c5c 100%)',
+    clr:'#888888', fee:550
+  },
+  'Chase Sapphire Preferred':{
+    img:'https://upgradedpoints.com/wp-content/uploads/2020/09/sapphire-preferred.png',
+    grad:'linear-gradient(135deg,#005691 0%,#0073b1 60%,#1a9fd4 100%)',
+    clr:'#0073b1', fee:95
+  },
+  'Chase Marriott Boundless':{
+    img:null,
+    grad:'linear-gradient(135deg,#003366 0%,#004d99 60%,#0066cc 100%)',
+    clr:'#004d99', fee:95
+  },
+  'Chase IHG Premier':{
+    img:null,
+    grad:'linear-gradient(135deg,#004B6B 0%,#006B93 60%,#1a8bb5 100%)',
+    clr:'#006B93', fee:99
+  },
+  'Chase Southwest Priority':{
+    img:null,
+    grad:'linear-gradient(135deg,#304CB2 0%,#4060c8 55%,#c81230 100%)',
+    clr:'#304CB2', fee:149
+  },
+  'BoA Premium Rewards Elite':{
+    img:'https://upgradedpoints.com/wp-content/uploads/2021/12/Bank-of-America-Premium-Rewards-Elite-Credit-Card.jpg',
+    grad:'linear-gradient(135deg,#5c1a1a 0%,#8B0000 50%,#CC0000 100%)',
+    clr:'#CC0000', fee:550
+  },
+  'BoA Premium Rewards':{
+    img:null,
+    grad:'linear-gradient(135deg,#8B0000 0%,#CC0000 60%,#E31837 100%)',
+    clr:'#E31837', fee:95
+  },
+  'Citi Premier':{
+    img:null,
+    grad:'linear-gradient(135deg,#003B79 0%,#004FA3 60%,#1a6cbf 100%)',
+    clr:'#004FA3', fee:95
+  },
+};
+
+// ================================================================
+// BENEFITS DATA
+// ================================================================
+const BENEFITS = [
+  // ── MONTHLY ─────────────────────────────────────────────────────
+  {id:'vic-gold-dining',    person:'Vic',   card:'Amex Gold',                   name:'餐廳 Credit',          amt:10,  freq:'monthly', cat:'餐廳', notes:'Grubhub / Buffalo Wild Wings / Five Guys / Cheesecake Factory / Wonder'},
+  {id:'vic-gold-uber',      person:'Vic',   card:'Amex Gold',                   name:'Uber Cash',            amt:10,  freq:'monthly', cat:'交通', notes:'加到 Uber 帳號，可用 Uber / Uber Eats'},
+  {id:'vic-gold-dunkin',    person:'Vic',   card:'Amex Gold',                   name:"Dunkin' Credit",       amt:7,   freq:'monthly', cat:'餐廳', notes:'美國任何 Dunkin\' 消費'},
+  {id:'vic-brilliant-rest', person:'Vic',   card:'Amex Marriott Brilliant',     name:'餐廳 Credit',          amt:25,  freq:'monthly', cat:'餐廳', notes:'全球任何餐廳直接刷卡消費'},
+  {id:'jenny-gold-dining',  person:'Jenny', card:'Amex Gold',                   name:'餐廳 Credit',          amt:10,  freq:'monthly', cat:'餐廳', notes:'Grubhub / Buffalo Wild Wings / Five Guys / Cheesecake Factory / Wonder'},
+  {id:'jenny-gold-uber',    person:'Jenny', card:'Amex Gold',                   name:'Uber Cash',            amt:10,  freq:'monthly', cat:'交通', notes:'加到 Uber 帳號，可用 Uber / Uber Eats'},
+  {id:'jenny-gold-dunkin',  person:'Jenny', card:'Amex Gold',                   name:"Dunkin' Credit",       amt:7,   freq:'monthly', cat:'餐廳', notes:'美國任何 Dunkin\' 消費'},
+
+  // ── QUARTERLY ────────────────────────────────────────────────────
+  {id:'vic-surpass1-q',   person:'Vic',   card:'Amex Hilton Surpass #1',      name:'Hilton Resort Credit', amt:50,  freq:'quarterly', cat:'飯店', notes:'在 Hilton 旗下度假村直接消費（非第三方訂房）'},
+  {id:'vic-surpass2-q',   person:'Vic',   card:'Amex Hilton Surpass #2 NLL',  name:'Hilton Resort Credit', amt:50,  freq:'quarterly', cat:'飯店', notes:'在 Hilton 旗下度假村直接消費（非第三方訂房）'},
+  {id:'vic-aspire-flight',person:'Vic',   card:'Amex Hilton Aspire',          name:'航班 Credit',          amt:50,  freq:'quarterly', cat:'機票', notes:'直接向航空公司購票，或透過 amextravel.com'},
+  {id:'vic-cff-5x',       person:'Vic',   card:'Chase Freedom Flex',          name:'5% 加速類別',          amt:75,  freq:'quarterly', cat:'現金回饋', notes:'Q1: 餐廳/Norwegian | Q2: Amazon/Chase Travel\nQ3/Q4 待公布｜上限 $1,500 = 最多 $75', activation:'⚡ 每季必須到 Chase 網站 Activate！'},
+  {id:'jenny-cff-5x',     person:'Jenny', card:'Chase Freedom Flex',          name:'5% 加速類別',          amt:75,  freq:'quarterly', cat:'現金回饋', notes:'Q1: 餐廳/Norwegian | Q2: Amazon/Chase Travel\nQ3/Q4 待公布｜上限 $1,500 = 最多 $75', activation:'⚡ 每季必須到 Chase 網站 Activate！'},
+
+  // ── SEMI-ANNUAL ──────────────────────────────────────────────────
+  {id:'vic-gold-resy-h1',       person:'Vic',   card:'Amex Gold',                   name:'Resy Credit（上半年）',                  amt:50,  freq:'semi', half:1, cat:'餐廳', notes:'Resy 平台訂位並用 Amex Gold 消費 1-6月'},
+  {id:'vic-gold-resy-h2',       person:'Vic',   card:'Amex Gold',                   name:'Resy Credit（下半年）',                  amt:50,  freq:'semi', half:2, cat:'餐廳', notes:'Resy 平台訂位並用 Amex Gold 消費 7-12月'},
+  {id:'jenny-gold-resy-h1',     person:'Jenny', card:'Amex Gold',                   name:'Resy Credit（上半年）',                  amt:50,  freq:'semi', half:1, cat:'餐廳', notes:'Resy 平台訂位並用 Amex Gold 消費 1-6月'},
+  {id:'jenny-gold-resy-h2',     person:'Jenny', card:'Amex Gold',                   name:'Resy Credit（下半年）',                  amt:50,  freq:'semi', half:2, cat:'餐廳', notes:'Resy 平台訂位並用 Amex Gold 消費 7-12月'},
+  {id:'vic-aspire-resort-h1',   person:'Vic',   card:'Amex Hilton Aspire',          name:'Hilton Resort Credit（上半年）',         amt:200, freq:'semi', half:1, cat:'飯店', notes:'在參與 Hilton Resorts 直接消費 1-6月（合計 $400/年）'},
+  {id:'vic-aspire-resort-h2',   person:'Vic',   card:'Amex Hilton Aspire',          name:'Hilton Resort Credit（下半年）',         amt:200, freq:'semi', half:2, cat:'飯店', notes:'在參與 Hilton Resorts 直接消費 7-12月（合計 $400/年）'},
+  {id:'vic-boundless-air-h1',   person:'Vic',   card:'Chase Marriott Boundless',    name:'航空 Credit（上半年）',                  amt:50,  freq:'semi', half:1, cat:'機票', notes:'消費 $500 以上航空費用自動抵 $50（2026 新增）1-6月'},
+  {id:'vic-boundless-air-h2',   person:'Vic',   card:'Chase Marriott Boundless',    name:'航空 Credit（下半年）',                  amt:50,  freq:'semi', half:2, cat:'機票', notes:'消費 $500 以上航空費用自動抵 $50（2026 新增）7-12月'},
+  {id:'jenny-csr-dining-h1',    person:'Jenny', card:'Chase Sapphire Reserve',      name:'Exclusive Tables 餐廳（上半年）',        amt:150, freq:'semi', half:1, cat:'餐廳', notes:'Sapphire Exclusive Tables 指定餐廳 1-6月'},
+  {id:'jenny-csr-dining-h2',    person:'Jenny', card:'Chase Sapphire Reserve',      name:'Exclusive Tables 餐廳（下半年）',        amt:150, freq:'semi', half:2, cat:'餐廳', notes:'Sapphire Exclusive Tables 指定餐廳 7-12月'},
+  {id:'jenny-csr-stubhub-h1',   person:'Jenny', card:'Chase Sapphire Reserve',      name:'StubHub/Viagogo Credit（上半年）',       amt:150, freq:'semi', half:1, cat:'娛樂', notes:'stubhub.com 或 viagogo.com 購票消費 1-6月'},
+  {id:'jenny-csr-stubhub-h2',   person:'Jenny', card:'Chase Sapphire Reserve',      name:'StubHub/Viagogo Credit（下半年）',       amt:150, freq:'semi', half:2, cat:'娛樂', notes:'stubhub.com 或 viagogo.com 購票消費 7-12月'},
+
+  // ── ANNUAL ───────────────────────────────────────────────────────
+  {id:'vic-aspire-clear',       person:'Vic',   card:'Amex Hilton Aspire',          name:'CLEAR+ Credit',                          amt:209, freq:'annual', cat:'旅行', notes:'支付 CLEAR+ 年費時自動抵扣（全額）'},
+  {id:'vic-aspire-freenight',   person:'Vic',   card:'Amex Hilton Aspire',          name:'年度免費房晚',                           amt:0,   freq:'annual', cat:'飯店', notes:'每年 renewal 後取得，可用於高端 Hilton 物業', nm:true},
+  {id:'vic-brilliant-freenight',person:'Vic',   card:'Amex Marriott Brilliant',     name:'年度免費房晚（85K pts）',                amt:0,   freq:'annual', cat:'飯店', notes:'每年 renewal 後取得，含 Ritz-Carlton / St. Regis', nm:true},
+  {id:'vic-brilliant-ritz',     person:'Vic',   card:'Amex Marriott Brilliant',     name:'Ritz/St.Regis 物業 Credit',              amt:100, freq:'annual', cat:'飯店', notes:'需至少連住 2 晚，透過 booking.marriott.com 直訂'},
+  {id:'vic-green-loungebuddy',  person:'Vic',   card:'Amex Green',                  name:'LoungeBuddy Credit',                     amt:100, freq:'annual', cat:'旅行', notes:'購買單次機場貴賓室入場券'},
+  {id:'vic-green-clear',        person:'Vic',   card:'Amex Green',                  name:'CLEAR+ Credit',                          amt:209, freq:'annual', cat:'旅行', notes:'⚠️ 和 Aspire 重複，兩張只能選一張使用！'},
+  {id:'vic-ihg-freenight',      person:'Vic',   card:'Chase IHG Premier',           name:'年度免費房晚（40K pts）',                amt:0,   freq:'annual', cat:'飯店', notes:'每年 anniversary 後取得', nm:true},
+  {id:'vic-boundless-freenight',person:'Vic',   card:'Chase Marriott Boundless',    name:'年度免費房晚（35K pts）',                amt:0,   freq:'annual', cat:'飯店', notes:'每年 anniversary 後取得', nm:true},
+  {id:'vic-boa-elite-airline',  person:'Vic',   card:'BoA Premium Rewards Elite',   name:'航空附加費 Credit',                      amt:300, freq:'annual', cat:'機票', notes:'行李費 / 座位升級 / 機上消費等航空附加費'},
+  {id:'vic-boa-elite-life',     person:'Vic',   card:'BoA Premium Rewards Elite',   name:'生活 Credit',                            amt:150, freq:'annual', cat:'生活', notes:'外送 / 串流服務 / 共乘 / 健身訂閱'},
+  {id:'vic-boa-pr-airline',     person:'Vic',   card:'BoA Premium Rewards',         name:'航空附加費 Credit',                      amt:100, freq:'annual', cat:'機票', notes:'行李費等航空附加費'},
+  {id:'vic-csp-hotel',          person:'Vic',   card:'Chase Sapphire Preferred',    name:'飯店 Credit',                            amt:50,  freq:'annual', cat:'飯店', notes:'透過 Chase Travel 訂飯店'},
+  {id:'vic-citi-hotel',         person:'Vic',   card:'Citi Premier',                name:'飯店 Credit',                            amt:100, freq:'annual', cat:'飯店', notes:'訂 $500+ 飯店透過 CitiTravel.com，每年限一次'},
+  {id:'jenny-csr-travel',       person:'Jenny', card:'Chase Sapphire Reserve',      name:'旅遊 Credit',                            amt:300, freq:'annual', cat:'旅行', notes:'幾乎所有旅遊消費自動抵扣，最靈活的 Credit'},
+  {id:'jenny-csr-theedit',      person:'Jenny', card:'Chase Sapphire Reserve',      name:'The Edit 飯店 Credit',                   amt:500, freq:'annual', cat:'飯店', notes:'Chase Travel → The Edit 訂精品飯店，每筆上限 $250，合計 $500'},
+  {id:'jenny-csr-ihg',          person:'Jenny', card:'Chase Sapphire Reserve',      name:'IHG/Omni 飯店 Credit',                   amt:250, freq:'annual', cat:'飯店', notes:'IHG 或 Omni 旗下特定飯店消費'},
+  {id:'jenny-csr-apple',        person:'Jenny', card:'Chase Sapphire Reserve',      name:'Apple TV+ + Apple Music',                amt:288, freq:'annual', cat:'娛樂', notes:'至 2027/6/22 自動提供訂閱', auto:true},
+  {id:'jenny-csr-freenight',    person:'Jenny', card:'Chase Sapphire Reserve',      name:'年度免費房晚',                           amt:0,   freq:'annual', cat:'飯店', notes:'renewal 後取得', nm:true},
+  {id:'jenny-ihg-freenight',    person:'Jenny', card:'Chase IHG Premier',           name:'年度免費房晚（40K pts）',                amt:0,   freq:'annual', cat:'飯店', notes:'每年 anniversary 後取得', nm:true},
+  {id:'jenny-boa-elite-airline',person:'Jenny', card:'BoA Premium Rewards Elite',   name:'航空附加費 Credit',                      amt:300, freq:'annual', cat:'機票', notes:'行李費 / 座位升級 / 機上消費等'},
+  {id:'jenny-boa-elite-life',   person:'Jenny', card:'BoA Premium Rewards Elite',   name:'生活 Credit',                            amt:150, freq:'annual', cat:'生活', notes:'外送 / 串流服務 / 共乘 / 健身訂閱'},
+  {id:'jenny-csp-hotel',        person:'Jenny', card:'Chase Sapphire Preferred',    name:'飯店 Credit',                            amt:50,  freq:'annual', cat:'飯店', notes:'透過 Chase Travel 訂飯店'},
+  {id:'jenny-citi-hotel',       person:'Jenny', card:'Citi Premier',                name:'飯店 Credit',                            amt:100, freq:'annual', cat:'飯店', notes:'訂 $500+ 飯店透過 CitiTravel.com，每年限一次'},
+  {id:'jenny-sw-anniversary',   person:'Jenny', card:'Chase Southwest Priority',    name:'週年 7,500 點（~$105）',                 amt:105, freq:'annual', cat:'里程', notes:'週年日自動存入，約 $105 價值', auto:true},
+];
+
+// ================================================================
+// STATE
+// ================================================================
+const S = {
+  person:'all', freq:'all',
+  year:2026, month:5,
+  viewMode:'person',
+  selectedDay:null,
+  logPerson:'all', logCard:'all',
+  cardStatus:{},
+  completions:{}, scriptUrl:'', userName:'Vic',
+};
+
+const openCards = new Set();
+
+function getQ(){ return Math.ceil(S.month/3) }
+function getH(){ return S.month<=6?1:2 }
+
+// ================================================================
+// PERSISTENCE
+// ================================================================
+function load(){
+  try{
+    const d=JSON.parse(localStorage.getItem('fcc_v3')||'{}');
+    S.completions=d.completions||{};
+    S.scriptUrl=d.scriptUrl||'';
+    S.userName=d.userName||'Vic';
+    S.cardStatus=d.cardStatus||{};
+  }catch(e){}
+}
+function save(){
+  localStorage.setItem('fcc_v3',JSON.stringify({
+    completions:S.completions,scriptUrl:S.scriptUrl,
+    userName:S.userName,cardStatus:S.cardStatus
+  }));
+}
+
+// ================================================================
+// PERIOD KEY
+// ================================================================
+function pkey(b){
+  if(b.freq==='monthly')   return `${S.year}-${pad(S.month)}`;
+  if(b.freq==='quarterly') return `${S.year}-Q${getQ()}`;
+  if(b.freq==='semi')      return `${S.year}-H${b.half}`;
+  if(b.freq==='annual')    return `${S.year}`;
+  return `${S.year}`;
+}
+function ckey(b){ return `${b.id}__${pkey(b)}`; }
+function pad(n){ return String(n).padStart(2,'0') }
+
+function periodDateRange(){
+  const yr=S.year,mo=S.month;
+  if(S.freq==='annual') return {start:`${yr}-01-01`,end:`${yr}-12-31`};
+  if(S.freq==='quarterly'){
+    const q=getQ(),sm=(q-1)*3+1,em=q*3;
+    return {start:`${yr}-${pad(sm)}-01`,end:`${yr}-${pad(em)}-${pad(new Date(yr,em,0).getDate())}`};
+  }
+  if(S.freq==='semi'){
+    const h=getH(),sm=h===1?1:7,em=h===1?6:12;
+    return {start:`${yr}-${pad(sm)}-01`,end:`${yr}-${pad(em)}-${pad(new Date(yr,em,0).getDate())}`};
+  }
+  const ld=new Date(yr,mo,0).getDate();
+  return {start:`${yr}-${pad(mo)}-01`,end:`${yr}-${pad(mo)}-${pad(ld)}`};
+}
+
+function isCardActive(card,person){
+  const st=S.cardStatus[`${person}::${card}`];
+  if(!st) return true;
+  const {start,end}=periodDateRange();
+  if(st.openDate&&st.openDate>end) return false;
+  if(st.closeDate&&st.closeDate<start) return false;
+  return true;
+}
+
+function isVisible(b){
+  if(S.person!=='all'&&b.person!==S.person) return false;
+  if(S.freq!=='all'&&b.freq!==S.freq) return false;
+  if(b.freq==='semi'&&S.freq==='all') return b.half===getH();
+  if(!isCardActive(b.card,b.person)) return false;
+  return true;
+}
+
+// ================================================================
+// VIEW MODE
+// ================================================================
+function setViewMode(mode){
+  S.viewMode=mode;
+  document.getElementById('vtPerson').classList.toggle('active',mode==='person');
+  document.getElementById('vtCard').classList.toggle('active',mode==='card');
+  document.getElementById('vtLog').classList.toggle('active',mode==='log');
+  document.getElementById('bnavPerson').classList.toggle('active',mode==='person');
+  document.getElementById('bnavCard').classList.toggle('active',mode==='card');
+  document.getElementById('bnavLog').classList.toggle('active',mode==='log');
+  render();
+}
+
+function toggleAcc(cardKey){
+  if(openCards.has(cardKey)) openCards.delete(cardKey);
+  else openCards.add(cardKey);
+  render();
+}
+
+// ================================================================
+// NAVIGATION
+// ================================================================
+function movePeriod(dir){
+  if(S.freq==='annual'){S.year+=dir;}
+  else if(S.freq==='quarterly'){
+    let q=getQ()+dir;
+    if(q<1){q=4;S.year--}else if(q>4){q=1;S.year++}
+    S.month=(q-1)*3+1;
+  }else if(S.freq==='semi'){
+    let h=getH()+dir;
+    if(h<1){h=2;S.year--}else if(h>2){h=1;S.year++}
+    S.month=h===1?1:7;
+  }else{
+    S.month+=dir;
+    if(S.month<1){S.month=12;S.year--}
+    else if(S.month>12){S.month=1;S.year++}
+  }
+  render();
+}
+function goToday(){
+  const n=new Date();S.year=n.getFullYear();S.month=n.getMonth()+1;render();
+}
+function periodLabel(){
+  const mn=['一','二','三','四','五','六','七','八','九','十','十一','十二'];
+  if(S.freq==='annual') return `${S.year}年`;
+  if(S.freq==='quarterly') return `${S.year} Q${getQ()}`;
+  if(S.freq==='semi') return `${S.year}年 ${getH()===1?'上':'下'}半年`;
+  return `${S.year}年${mn[S.month-1]}月`;
+}
+
+// ================================================================
+// TOGGLE COMPLETION
+// ================================================================
+let _pendingId=null;
+
+function toggle(id,e){
+  e.stopPropagation();
+  const b=BENEFITS.find(x=>x.id===id);if(!b)return;
+  const k=ckey(b);
+  if(S.completions[k]){
+    // Uncomplete: direct (log view uses logUndo with confirm)
+    delete S.completions[k];
+    save();
+    if(S.scriptUrl) pushSync(k,null);
+    render();
+  }else{
+    // Complete: ask for actual date
+    _pendingId=id;
+    const today=new Date();
+    const todayStr=today.toISOString().slice(0,10);
+    const curYear=today.getFullYear(),curMonth=today.getMonth()+1;
+    const isPast=S.year<curYear||(S.year===curYear&&S.month<curMonth);
+
+    // Smart default: today for current period, last day of period for past
+    let defaultDate=todayStr;
+    if(isPast){
+      if(b.freq==='monthly'){
+        const ld=new Date(S.year,S.month,0).getDate();
+        defaultDate=`${S.year}-${pad(S.month)}-${pad(ld)}`;
+      }else if(b.freq==='quarterly'){
+        const lm=getQ()*3;
+        const ld=new Date(S.year,lm,0).getDate();
+        defaultDate=`${S.year}-${pad(lm)}-${pad(ld)}`;
+      }else if(b.freq==='semi'){
+        const lm=b.half===1?6:12;
+        const ld=new Date(S.year,lm,0).getDate();
+        defaultDate=`${S.year}-${pad(lm)}-${pad(ld)}`;
+      }else{
+        defaultDate=`${S.year}-12-31`;
+      }
+    }
+
+    document.getElementById('completeDateInput').value=defaultDate;
+    document.getElementById('completePersonInput').value=S.userName;
+    document.getElementById('completeDateBenefit').textContent=`${b.card}｜${b.name}`;
+    const hint=document.getElementById('completeDateHint');
+    if(isPast){
+      hint.style.display='block';
+      hint.textContent='📌 回溯補填：日期預設為該期間最後一天，請改成實際消費日期。';
+    }else{
+      hint.style.display='none';
+    }
+    openModal('completeDate');
+  }
+}
+
+function confirmComplete(){
+  if(!_pendingId)return;
+  const b=BENEFITS.find(x=>x.id===_pendingId);if(!b)return;
+  const k=ckey(b);
+  const dateVal=document.getElementById('completeDateInput').value;
+  const byVal=document.getElementById('completePersonInput').value.trim()||S.userName;
+  const iso=dateVal?new Date(dateVal+'T12:00:00').toISOString():new Date().toISOString();
+  S.completions[k]={at:iso,by:byVal};
+  save();
+  if(S.scriptUrl) pushSync(k,S.completions[k]);
+  _pendingId=null;
+  closeModal('completeDate');
+  render();
+}
+
+function cancelComplete(){
+  _pendingId=null;
+  closeModal('completeDate');
+}
+
+// ================================================================
+// RENDER
+// ================================================================
+const FREQS=[
+  {key:'monthly',  label:'每月',  badge:'badge-monthly',   icon:'🔴'},
+  {key:'quarterly',label:'每季',  badge:'badge-quarterly',  icon:'🟣'},
+  {key:'semi',     label:'半年',  badge:'badge-semi',       icon:'🔵'},
+  {key:'annual',   label:'每年',  badge:'badge-annual',     icon:'🟢'},
+];
+const PERSONS=['all','Vic','Jenny','QbQ','Amber'];
+const PNAMES={all:'全部',Vic:'Vic',Jenny:'Jenny',QbQ:'QbQ',Amber:'Amber'};
+
+function buildPersonTabs(){
+  const el=document.getElementById('personTabs');
+  el.innerHTML=PERSONS.map(p=>`
+    <button class="person-tab${S.person===p?' active':''}" onclick="setPerson('${p}')">
+      ${p!=='all'?`<span class="dot dot-${p.toLowerCase()}"></span>`:''}${PNAMES[p]}
+    </button>`).join('');
+}
+function buildFreqPills(){
+  const el=document.getElementById('freqPills');
+  el.innerHTML=[{key:'all',label:'全部'},...FREQS].map(f=>`
+    <button class="freq-pill${S.freq===f.key?' active':''}" onclick="setFreq('${f.key}')">${f.icon||''} ${f.label}</button>`).join('');
+}
+function setPerson(p){S.person=p;render()}
+function setFreq(f){S.freq=f;render()}
+
+function render(){
+  document.getElementById('periodLbl').textContent=periodLabel();
+  document.getElementById('vtPerson').classList.toggle('active',S.viewMode==='person');
+  document.getElementById('vtCard').classList.toggle('active',S.viewMode==='card');
+  document.getElementById('vtLog').classList.toggle('active',S.viewMode==='log');
+  document.getElementById('bnavPerson').classList.toggle('active',S.viewMode==='person');
+  document.getElementById('bnavCard').classList.toggle('active',S.viewMode==='card');
+  document.getElementById('bnavLog').classList.toggle('active',S.viewMode==='log');
+  buildPersonTabs();
+  buildFreqPills();
+
+  const visible=BENEFITS.filter(isVisible);
+
+  // Stats
+  let done=0,total=0,earned=0,pending=0;
+  visible.forEach(b=>{
+    if(b.nm)return;
+    total++;
+    const k=ckey(b);
+    if(S.completions[k]){done++;earned+=b.amt;}
+    else pending+=b.amt;
+  });
+  document.getElementById('sCompleted').textContent=`${done}/${total}`;
+  document.getElementById('sEarned').textContent=`$${earned.toLocaleString()}`;
+  document.getElementById('sPending').textContent=`$${pending.toLocaleString()}`;
+  const pct=total>0?Math.round(done/total*100):0;
+  document.getElementById('progFill').style.width=pct+'%';
+  document.getElementById('progPct').textContent=pct+'%';
+
+  if(S.viewMode==='card'){
+    renderCardView(visible);
+  }else if(S.viewMode==='log'){
+    renderLogView();
+  }else{
+    renderPersonView(visible);
+  }
+}
+
+// ── Person View (original) ──────────────────────────────────────
+function renderPersonView(visible){
+  const main=document.getElementById('main');
+  main.className='main';
+  main.innerHTML='';
+  const groups={};
+  FREQS.forEach(f=>groups[f.key]=[]);
+  visible.forEach(b=>(groups[b.freq]||(groups[b.freq]=[])).push(b));
+
+  let hasAny=false;
+  FREQS.forEach(({key,label,badge,icon})=>{
+    const items=groups[key]||[];
+    if(!items.length)return;
+    hasAny=true;
+    const sec=document.createElement('div');
+    sec.className='freq-section';
+    const doneCount=items.filter(b=>S.completions[ckey(b)]).length;
+    const totalAmt=items.reduce((s,b)=>s+(b.nm?0:b.amt),0);
+    sec.innerHTML=`
+      <div class="section-head">
+        <span class="freq-badge ${badge}">${icon} ${label}</span>
+        <span class="section-sub">${doneCount}/${items.length} 完成 · 總價值 $${totalAmt.toLocaleString()}</span>
+      </div>
+      <div class="grid" id="g-${key}"></div>`;
+    main.appendChild(sec);
+    const grid=sec.querySelector(`#g-${key}`);
+    items.forEach(b=>grid.appendChild(buildBenefitCard(b)));
+  });
+
+  if(!hasAny){
+    main.innerHTML=`<div class="empty"><h3>此篩選下沒有福利任務</h3><p>切換不同人或頻率試試</p></div>`;
+  }
+}
+
+function buildBenefitCard(b){
+  const k=ckey(b);
+  const comp=S.completions[k];
+  const isDone=!!comp;
+  const div=document.createElement('div');
+  div.className='bcard'+(isDone?' done':'');
+  const dotClass=`dot-${b.person.toLowerCase()}`;
+  const dateStr=comp?new Date(comp.at).toLocaleDateString('zh-TW',{month:'short',day:'numeric'})+' · '+comp.by:'';
+  div.innerHTML=`
+    <div class="bcard-top">
+      <div class="bcard-meta">
+        <div class="bcard-who"><span class="dot ${dotClass}"></span>${b.person}</div>
+        <div class="bcard-name">${b.name}</div>
+        <div class="bcard-card">${b.card}</div>
+        ${b.activation?`<span class="tag tag-warn">${b.activation}</span>`:''}
+        ${b.auto?`<span class="tag tag-auto">✅ 自動套用</span>`:''}
+      </div>
+      <div class="amount${b.nm?' nm':''}">${b.nm?'🎫 免費房晚':`+$${b.amt}`}</div>
+    </div>
+    ${b.notes?`<div class="bcard-notes">${b.notes.replace(/\n/g,'<br>')}</div>`:''}
+    <div class="bcard-foot">
+      <button class="complete-btn" onclick="toggle('${b.id}',event)">
+        ${isDone?'✅ 已完成':'○ 標記完成'}
+      </button>
+      <div class="done-info">${dateStr}</div>
+    </div>`;
+  return div;
+}
+
+// ── Card View ───────────────────────────────────────────────────
+function renderCardView(visible){
+  const main=document.getElementById('main');
+  main.className='';
+  main.innerHTML='';
+
+  // Group by person::card
+  const cardMap=new Map();
+  visible.forEach(b=>{
+    const k=`${b.person}::${b.card}`;
+    if(!cardMap.has(k)) cardMap.set(k,[]);
+    cardMap.get(k).push(b);
+  });
+
+  if(cardMap.size===0){
+    main.innerHTML=`<div class="empty"><h3>此篩選下沒有信用卡</h3><p>切換不同人或頻率試試</p></div>`;
+    return;
+  }
+
+  const grid=document.createElement('div');
+  grid.className='cc-grid';
+
+  cardMap.forEach((benefits,cardKey)=>{
+    const [person,card]=cardKey.split('::');
+    const info=CARD_INFO[card]||{img:null,grad:'linear-gradient(135deg,#2a2d3a,#3a3d4a)'};
+    const isOpen=openCards.has(cardKey);
+
+    const nonNm=benefits.filter(b=>!b.nm);
+    const doneCount=nonNm.filter(b=>S.completions[ckey(b)]).length;
+    const totalCnt=nonNm.length;
+    const totalAmt=nonNm.reduce((s,b)=>s+b.amt,0);
+    const allDone=totalCnt>0&&doneCount===totalCnt;
+    const dotClass=`dot-${person.toLowerCase()}`;
+
+    // ROI data (full year view)
+    const allCardBenefits=BENEFITS.filter(b=>b.card===card&&b.person===person);
+    const fee=info.fee??0;
+    const yearMax=roiYearMax(allCardBenefits);
+    const yearEarned=roiYearEarned(allCardBenefits,S.year);
+    const roiPct=fee>0?Math.min(Math.round(yearEarned/fee*100),999):null;
+    const coverPct=fee>0?Math.min(yearEarned/fee*100,100):0;
+    const roiColor=roiPct===null?'var(--accent)':roiPct>=100?'var(--done)':roiPct>=50?'var(--warn)':'var(--danger)';
+
+    const item=document.createElement('div');
+    item.className=`cc-item${isOpen?' open':''}${allDone?' all-done':''}`;
+
+    // Card tile: try image, fallback to gradient
+    let tileContent;
+    if(info.img){
+      tileContent=`
+        <img class="cc-tile-img" src="${info.img}" alt="${card}"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <div class="cc-tile-grad" style="background:${info.grad};display:none;width:100%;height:100%"></div>`;
+    }else{
+      tileContent=`<div class="cc-tile-grad" style="background:${info.grad};width:100%;height:100%"></div>`;
+    }
+
+    const pendingTxt=allDone?'✅ 全部完成':`${totalCnt-doneCount} 項待完成`;
+
+    // ROI bar HTML
+    const roiHtml=`
+      <div class="cc-roi">
+        <div class="cc-roi-stats">
+          <div class="cc-roi-item"><div class="cc-roi-label">年費</div><div class="cc-roi-val">${fee?'$'+fee.toLocaleString():'免年費'}</div></div>
+          <div class="cc-roi-item"><div class="cc-roi-label">年度上限</div><div class="cc-roi-val">$${yearMax.toLocaleString()}</div></div>
+          <div class="cc-roi-item"><div class="cc-roi-label">${S.year} 已回收</div><div class="cc-roi-val" style="color:#4ade80">$${yearEarned.toLocaleString()}</div></div>
+          ${roiPct!==null?`<div class="cc-roi-item"><div class="cc-roi-label">年費回本</div><div class="cc-roi-val" style="color:${roiColor}">${roiPct}%</div></div>`:''}
+          <div class="cc-roi-track"><div class="cc-roi-fill" style="width:${coverPct}%;background:${roiColor}"></div></div>
+        </div>
+      </div>`;
+
+    item.innerHTML=`
+      <div class="cc-tile" onclick="toggleAcc('${cardKey}')">
+        ${tileContent}
+        <div class="cc-tile-overlay">
+          <div class="cc-tile-name">${card}</div>
+          <div class="cc-tile-person"><span class="dot ${dotClass}"></span>${person}</div>
+        </div>
+        <div class="cc-tile-badge">${doneCount}/${totalCnt}</div>
+      </div>
+      ${roiHtml}
+      <div class="cc-summary" onclick="toggleAcc('${cardKey}')">
+        <div class="cc-summary-info">
+          <div class="cc-summary-count">${pendingTxt}</div>
+          <div class="cc-summary-val">共 $${totalAmt.toLocaleString()}</div>
+        </div>
+        <span class="cc-chevron">▾</span>
+      </div>
+      <div class="cc-acc">${buildAccContent(benefits)}</div>`;
+
+    grid.appendChild(item);
+  });
+
+  main.appendChild(grid);
+}
+
+function buildAccContent(benefits){
+  const FREQ_ORDER=['monthly','quarterly','semi','annual'];
+  const FREQ_LABELS={monthly:'每月',quarterly:'每季',semi:'半年',annual:'每年'};
+  const groups={};
+  benefits.forEach(b=>{
+    if(!groups[b.freq]) groups[b.freq]=[];
+    groups[b.freq].push(b);
+  });
+
+  let html='';
+  FREQ_ORDER.forEach(freq=>{
+    if(!groups[freq]) return;
+    html+=`<div class="cc-acc-freq-hd">${FREQ_LABELS[freq]}</div>`;
+    groups[freq].forEach(b=>{
+      const k=ckey(b);
+      const comp=S.completions[k];
+      const isDone=!!comp;
+      const noteShort=b.notes?b.notes.split('\n')[0].slice(0,48)+(b.notes.split('\n')[0].length>48?'…':''):'';
+      const dateStr=comp?new Date(comp.at).toLocaleDateString('zh-TW',{month:'short',day:'numeric'})+' '+comp.by:'';
+      html+=`
+        <div class="cc-acc-row${isDone?' done':''}" onclick="toggle('${b.id}',event)">
+          <div class="cc-check">${isDone?'✓':''}</div>
+          <div class="cc-acc-info">
+            <div class="cc-acc-name">${b.name}</div>
+            ${noteShort?`<div class="cc-acc-sub">${noteShort}</div>`:''}
+            ${b.activation?`<span class="cc-acc-tag">${b.activation}</span>`:''}
+            ${b.auto?`<span class="cc-acc-tag cc-acc-tag-auto">✅ 自動套用</span>`:''}
+          </div>
+          <div class="cc-acc-right">
+            <div class="cc-acc-amt${b.nm?' nm':''}">${b.nm?'🎫':`+$${b.amt}`}</div>
+            ${dateStr?`<div class="cc-acc-done-info">${dateStr}</div>`:''}
+          </div>
+        </div>`;
+    });
+  });
+  return html;
+}
+
+// ================================================================
+// MODAL
+// ================================================================
+function openModal(id){
+  document.getElementById('modal-'+id).classList.add('open');
+  if(id==='settings'){
+    document.getElementById('inputUrl').value=S.scriptUrl;
+    document.getElementById('inputName').value=S.userName;
+  }
+}
+function closeModal(id){document.getElementById('modal-'+id).classList.remove('open')}
+function toggleInstructions(){
+  const el=document.getElementById('instructions');
+  el.style.display=el.style.display==='none'?'block':'none';
+}
+function saveSettings(){
+  S.scriptUrl=document.getElementById('inputUrl').value.trim();
+  S.userName=document.getElementById('inputName').value.trim()||'User';
+  save();closeModal('settings');
+}
+
+// ================================================================
+// EXPORT / IMPORT
+// ================================================================
+function exportData(){
+  const blob=new Blob([JSON.stringify(S.completions,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`cc-benefits-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+}
+function importData(){
+  const inp=document.createElement('input');inp.type='file';inp.accept='.json';
+  inp.onchange=e=>{
+    const r=new FileReader();
+    r.onload=ev=>{try{const d=JSON.parse(ev.target.result);Object.assign(S.completions,d);save();render();alert('匯入成功！');}catch{alert('格式錯誤')}};
+    r.readAsText(e.target.files[0]);
+  };
+  inp.click();
+}
+
+// ================================================================
+// SYNC
+// ================================================================
+function showSync(msg,cls){
+  const el=document.getElementById('syncStatus');
+  el.innerHTML=`<span class="sync-badge ${cls}">${msg}</span>`;
+}
+async function pushSync(key,val){
+  if(!S.scriptUrl)return;
+  try{await fetch(S.scriptUrl,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'set',key,val})})}catch{}
+}
+async function pushCardStatusToSheet(key,val){
+  if(!S.scriptUrl)return;
+  try{await fetch(S.scriptUrl,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'setCardStatus',key,val})})}catch{}
+}
+async function syncNow(){
+  const url=document.getElementById('inputUrl').value.trim();
+  if(!url){showSync('請先填入 Apps Script URL','sync-err');return}
+  showSync('同步中…','sync-ing');
+  try{
+    // Sync completions
+    const r1=await fetch(url+'?action=getAll');
+    const d1=await r1.json();
+    if(d1.completions) Object.assign(S.completions,d1.completions);
+    // Sync card status
+    const r2=await fetch(url+'?action=getCardStatus');
+    const d2=await r2.json();
+    if(d2.cards) Object.assign(S.cardStatus,d2.cards);
+    save();render();
+    showSync('✅ 同步成功 '+new Date().toLocaleTimeString('zh-TW'),'sync-ok');
+  }catch(e){showSync('❌ 失敗：'+e.message,'sync-err')}
+}
+
+// ================================================================
+// CARD MANAGEMENT MODAL
+// ================================================================
+function openCardMgmt(){
+  closeModal('settings');
+  buildCardMgmtPanel();
+  openModal('cardMgmt');
+}
+
+function buildCardMgmtPanel(){
+  const seen=new Set();
+  const byPerson={};
+  BENEFITS.forEach(b=>{
+    const k=`${b.person}::${b.card}`;
+    if(!seen.has(k)){
+      seen.add(k);
+      if(!byPerson[b.person]) byPerson[b.person]=[];
+      byPerson[b.person].push({person:b.person,card:b.card,key:k});
+    }
+  });
+
+  const container=document.getElementById('cardMgmtList');
+  container.innerHTML='';
+
+  const today=new Date().toISOString().slice(0,10);
+
+  Object.keys(byPerson).sort().forEach(person=>{
+    const dotClass=`dot-${person.toLowerCase()}`;
+    let html=`<div class="cmgmt-group">
+      <div class="cmgmt-person-hd"><span class="dot ${dotClass}"></span>${person}</div>`;
+
+    byPerson[person].forEach(({card,key})=>{
+      const st=S.cardStatus[key]||{openDate:'',closeDate:'',notes:''};
+      const clr=(CARD_INFO[card]&&CARD_INFO[card].clr)||'#6366f1';
+      // Status
+      let statusCls='cmgmt-active',statusTxt='使用中';
+      if(st.closeDate){
+        if(st.closeDate<=today){statusCls='cmgmt-closed';statusTxt='已關卡';}
+        else{statusCls='cmgmt-closing';statusTxt=`${st.closeDate} 關卡`;}
+      }
+      html+=`<div class="cmgmt-row" id="cmrow-${key.replace(/[^a-z0-9]/gi,'-')}">
+        <div class="cmgmt-row-top">
+          <div style="width:10px;height:28px;border-radius:3px;background:${clr};flex-shrink:0"></div>
+          <div class="cmgmt-card-name">${card}</div>
+          <span class="cmgmt-status ${statusCls}">${statusTxt}</span>
+        </div>
+        <div class="cmgmt-dates">
+          <div class="cmgmt-field">
+            <label>開卡日期</label>
+            <input type="date" id="open-${key.replace(/[^a-z0-9]/gi,'-')}" value="${st.openDate||''}">
+          </div>
+          <div class="cmgmt-field">
+            <label>關卡日期（空白 = 仍持有）</label>
+            <input type="date" id="close-${key.replace(/[^a-z0-9]/gi,'-')}" value="${st.closeDate||''}">
+          </div>
+        </div>
+        <div class="cmgmt-actions">
+          <button class="cmgmt-btn cmgmt-btn-save" onclick="saveCardStatus('${key}')">💾 儲存</button>
+          <button class="cmgmt-btn cmgmt-btn-danger" onclick="closeCardToday('${key}')">🔴 標記今天關卡</button>
+        </div>
+      </div>`;
+    });
+    html+=`</div>`;
+    container.insertAdjacentHTML('beforeend',html);
+  });
+}
+
+function saveCardStatus(key){
+  const safeKey=key.replace(/[^a-z0-9]/gi,'-');
+  const openDate=document.getElementById('open-'+safeKey).value||null;
+  const closeDate=document.getElementById('close-'+safeKey).value||null;
+  const val={openDate,closeDate,notes:''};
+  S.cardStatus[key]=val;
+  save();
+  pushCardStatusToSheet(key,val);
+  buildCardMgmtPanel();
+  render();
+}
+
+function closeCardToday(key){
+  const today=new Date().toISOString().slice(0,10);
+  S.cardStatus[key]=Object.assign({},S.cardStatus[key]||{},{closeDate:today});
+  save();
+  pushCardStatusToSheet(key,S.cardStatus[key]);
+  buildCardMgmtPanel();
+  render();
+}
+
+// ================================================================
+// LOG / CALENDAR VIEW
+// ================================================================
+const DOT_BG  ={Vic:'rgba(99,102,241,.22)',Jenny:'rgba(236,72,153,.22)',QbQ:'rgba(245,158,11,.22)',Amber:'rgba(16,185,129,.22)'};
+const DOT_FG  ={Vic:'#818cf8',Jenny:'#f472b6',QbQ:'#fbbf24',Amber:'#34d399'};
+const DOT_CLR ={Vic:'#6366f1',Jenny:'#ec4899',QbQ:'#f59e0b',Amber:'#10b981'};
+const MN      =['一','二','三','四','五','六','七','八','九','十','十一','十二'];
+
+function roiYearMax(cardBenefits){
+  return cardBenefits.reduce((s,b)=>{
+    if(b.nm)return s;
+    const mult=b.freq==='monthly'?12:b.freq==='quarterly'?4:1;
+    return s+b.amt*mult;
+  },0);
+}
+function roiYearEarned(cardBenefits,yr){
+  let total=0;
+  cardBenefits.forEach(b=>{
+    if(b.nm)return;
+    if(b.freq==='monthly'){for(let m=1;m<=12;m++){const k=`${b.id}__${yr}-${pad(m)}`;if(S.completions[k])total+=b.amt;}}
+    else if(b.freq==='quarterly'){for(let q=1;q<=4;q++){const k=`${b.id}__${yr}-Q${q}`;if(S.completions[k])total+=b.amt;}}
+    else if(b.freq==='semi'){const k=`${b.id}__${yr}-H${b.half}`;if(S.completions[k])total+=b.amt;}
+    else if(b.freq==='annual'){const k=`${b.id}__${yr}`;if(S.completions[k])total+=b.amt;}
+  });
+  return total;
+}
+
+function buildEventData(){
+  const pf=S.logPerson||'all';
+  const cf=S.logCard||'all';
+  const events=[];
+  Object.entries(S.completions).forEach(([key,val])=>{
+    const [bId]=key.split('__');
+    const b=BENEFITS.find(x=>x.id===bId);
+    if(!b)return;
+    if(pf!=='all'&&b.person!==pf)return;
+    if(cf!=='all'&&b.card!==cf)return;
+    events.push({key,bId,person:b.person,card:b.card,name:b.name,amt:b.amt,nm:b.nm||false,at:val.at,by:val.by,date:val.at.slice(0,10)});
+  });
+  events.sort((a,b)=>b.at.localeCompare(a.at));
+  return events;
+}
+
+function setLogPerson(p){
+  S.logPerson=p; S.logCard='all'; S.selectedDay=null; render();
+}
+function setLogCard(c){
+  S.logCard=c; S.selectedDay=null; render();
+}
+function logUndo(key,bId,e){
+  e.stopPropagation();
+  if(!S.completions[key])return;
+  const b=BENEFITS.find(x=>x.id===bId);
+  const label=b?b.name:bId;
+  if(!confirm(`確定取消「${label}」的完成紀錄？`))return;
+  delete S.completions[key];
+  save();
+  if(S.scriptUrl)pushSync(key,null);
+  render();
+}
+
+function renderLogView(){
+  const main=document.getElementById('main');
+  main.className='';
+  main.innerHTML='';
+  const events=buildEventData();
+
+  const wrap=document.createElement('div');
+  wrap.className='log-wrap';
+
+  // Calendar
+  const calDiv=document.createElement('div');
+  calDiv.className='cal-card';
+  calDiv.innerHTML=buildCalendarHTML(events);
+
+  // Log
+  const logDiv=document.createElement('div');
+  logDiv.className='log-col';
+  logDiv.innerHTML=buildLogHTML(events);
+
+  wrap.appendChild(calDiv);
+  wrap.appendChild(logDiv);
+  main.appendChild(wrap);
+}
+
+function buildCalendarHTML(events){
+  const yr=S.year,mo=S.month;
+  const today=new Date();
+  const todayStr=`${today.getFullYear()}-${pad(today.getMonth()+1)}-${pad(today.getDate())}`;
+
+  // Build day→persons map (all history, but show on current month calendar)
+  const dayMap={};
+  events.forEach(ev=>{
+    if(!dayMap[ev.date])dayMap[ev.date]=new Set();
+    dayMap[ev.date].add(ev.person);
+  });
+
+  const firstDow=new Date(yr,mo-1,1).getDay();
+  const daysInMonth=new Date(yr,mo,0).getDate();
+  const DOW=['日','一','二','三','四','五','六'];
+
+  let html=`
+    <div class="cal-head">
+      <h3>${yr}年${MN[mo-1]}月</h3>
+    </div>
+    <div class="cal-grid">
+      ${DOW.map(d=>`<div class="cal-dow">${d}</div>`).join('')}`;
+
+  for(let i=0;i<firstDow;i++) html+=`<div class="cal-day other-month"></div>`;
+
+  for(let d=1;d<=daysInMonth;d++){
+    const ds=`${yr}-${pad(mo)}-${pad(d)}`;
+    const persons=dayMap[ds]?[...dayMap[ds]]:[];
+    const isToday=ds===todayStr;
+    const isSel=S.selectedDay===ds;
+    const hasEv=persons.length>0;
+    const cls=['cal-day',isToday?'today':'',isSel?'selected':'',hasEv?'has-events':''].filter(Boolean).join(' ');
+    const dots=persons.map(p=>`<span class="cal-dot" style="background:${DOT_CLR[p]||'#888'}"></span>`).join('');
+    const oc=hasEv?`onclick="selectDay('${ds}')"`:'' ;
+    html+=`<div class="${cls}" ${oc}><div class="cal-dn">${d}</div><div class="cal-dots">${dots}</div></div>`;
+  }
+
+  html+=`</div>
+    <div class="cal-legend">
+      ${Object.keys(DOT_CLR).map(p=>`<div class="cal-legend-item"><span class="cal-dot" style="background:${DOT_CLR[p]}"></span>${p}</div>`).join('')}
+    </div>`;
+  return html;
+}
+
+function buildLogHTML(allEvents){
+  // Build person + card filter options from ALL completions (not filtered)
+  const allRaw=[];
+  Object.entries(S.completions).forEach(([key,val])=>{
+    const [bId]=key.split('__');
+    const b=BENEFITS.find(x=>x.id===bId);
+    if(b) allRaw.push(b);
+  });
+  const persons=[...new Set(allRaw.map(b=>b.person))].sort();
+  const cards=S.logPerson==='all'
+    ?[...new Set(allRaw.map(b=>b.card))].sort()
+    :[...new Set(allRaw.filter(b=>b.person===S.logPerson).map(b=>b.card))].sort();
+
+  // Filter for display
+  const filtered=S.selectedDay?allEvents.filter(e=>e.date===S.selectedDay):allEvents;
+
+  // Header label
+  let selLabel='全部歷史紀錄';
+  if(S.selectedDay){
+    const [y,m,d]=S.selectedDay.split('-');
+    const dow=['日','一','二','三','四','五','六'][new Date(S.selectedDay).getDay()];
+    selLabel=`${y}年${MN[parseInt(m)-1]}月${parseInt(d)}日（${dow}）`;
+  }
+
+  // Filter pills HTML
+  const personPills=[{k:'all',label:'全部'},...persons.map(p=>({k:p,label:p}))].map(({k,label})=>
+    `<button class="log-fp${S.logPerson===k?' lf-active':''}" onclick="setLogPerson('${k}')">${k!=='all'?`<span class="dot dot-${k.toLowerCase()}" style="width:6px;height:6px"></span> `:''}${label}</button>`
+  ).join('');
+  const cardPills=cards.length===0?'':[{k:'all',label:'全部卡'}, ...cards.map(c=>({k:c,label:c}))].map(({k,label})=>
+    `<button class="log-fp${S.logCard===k?' lf-active':''}" onclick="setLogCard('${k}')">${label}</button>`
+  ).join('');
+
+  let html=`
+  <div class="log-filter-bar">
+    <div class="log-filter-row">${personPills}</div>
+    ${cards.length?`<div class="log-filter-row">${cardPills}</div>`:''}
+  </div>
+  <div class="log-hd">
+    <div class="log-hd-title">📋 ${selLabel}</div>
+    ${S.selectedDay?`<button class="log-clear" onclick="selectDay(null)">✕ 顯示全部日期</button>`:''}
+  </div>`;
+
+  if(!filtered.length){
+    html+=`<div class="log-empty">${S.selectedDay?'這天沒有符合的紀錄':'目前篩選條件下沒有紀錄'}</div>`;
+    return html;
+  }
+
+  // Group by date
+  const dateGroups={};
+  filtered.forEach(ev=>{
+    if(!dateGroups[ev.date])dateGroups[ev.date]=[];
+    dateGroups[ev.date].push(ev);
+  });
+
+  Object.keys(dateGroups).sort((a,b)=>b.localeCompare(a)).forEach(date=>{
+    const [y,m,d]=date.split('-');
+    const dow=['日','一','二','三','四','五','六'][new Date(date).getDay()];
+    const total=dateGroups[date].reduce((s,e)=>s+(e.nm?0:e.amt),0);
+    html+=`<div class="log-day-group">
+      <div class="log-day-hd">
+        <span>${y}年${MN[parseInt(m)-1]}月${parseInt(d)}日（${dow}）</span>
+        <span class="log-day-total">+$${total.toLocaleString()}</span>
+      </div>`;
+    dateGroups[date].forEach(ev=>{
+      const initials=ev.person.slice(0,2);
+      const time=new Date(ev.at).toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'});
+      const cardClr=(CARD_INFO[ev.card]&&CARD_INFO[ev.card].clr)||'#6366f1';
+      html+=`<div class="log-row" style="border-left:3px solid ${cardClr}">
+        <div class="log-avatar" style="background:${DOT_BG[ev.person]||'rgba(128,128,128,.2)'};color:${DOT_FG[ev.person]||'#888'}">${initials}</div>
+        <div class="log-info">
+          <div class="log-name">${ev.name}</div>
+          <div class="log-sub">
+            <span class="log-card-badge" style="background:${cardClr}22;color:${cardClr}">${ev.card}</span>
+            · ${ev.by}
+          </div>
+        </div>
+        <div class="log-right">
+          <div class="log-amt${ev.nm?' nm':''}">${ev.nm?'🎫':`+$${ev.amt}`}</div>
+          <div class="log-time">${time}</div>
+        </div>
+        <button class="log-undo-btn" onclick="logUndo('${ev.key}','${ev.bId}',event)" title="取消完成">↩</button>
+      </div>`;
+    });
+    html+=`</div>`;
+  });
+  return html;
+}
+
+function selectDay(ds){
+  S.selectedDay=(S.selectedDay===ds)?null:ds;
+  render();
+}
+
+// ================================================================
+// INIT
+// ================================================================
+load();
+const now=new Date();S.year=now.getFullYear();S.month=now.getMonth()+1;
+render();
+</script>
+</body>
+</html>
