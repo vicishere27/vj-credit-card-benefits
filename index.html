@@ -887,7 +887,7 @@ function buildAnnounceBar(){
 
   const isEnd=day>=25;
   const dismissKey=`ann_${S.year}_${S.month}_${isEnd?'end':'mid'}`;
-  if(localStorage.getItem(dismissKey)){bar.innerHTML='';return;}
+  if(sessionStorage.getItem(dismissKey)){bar.innerHTML='';return;}
 
   const monthTotal=new Date(S.year,S.month,0).getDate();
   const daysLeft=monthTotal-day;
@@ -930,7 +930,7 @@ function buildAnnounceBar(){
 }
 
 function dismissAnnounce(key){
-  localStorage.setItem(key,'1');
+  sessionStorage.setItem(key,'1');
   document.getElementById('announceBar').innerHTML='';
 }
 
