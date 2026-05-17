@@ -528,13 +528,13 @@ const CARD_INFO = {
     notionId:'c2a83ea8-8e06-4fb1-9e7c-6cbae68728c9'
   },
   'Amex Hilton Surpass #1':{
-    img:'https://www.aexp-static.com/online/myca/shared/summary/cardasset/images/NUS000000101_480x304_STRAIGHT_96.png',
+    img:'https://stories.hilton.com/uploads/2023/10/Hilton-Honors-American-Express-Surpass-Card.jpg',
     grad:'linear-gradient(135deg,#002B5B 0%,#0052a5 60%,#2b8fd4 100%)',
     clr:'#0052a5', fee:150,
     notionId:'5afb5ee0-3909-4f63-aa0c-f80cf58ceef3'
   },
   'Amex Hilton Surpass #2 NLL':{
-    img:'https://www.aexp-static.com/online/myca/shared/summary/cardasset/images/NUS000000101_480x304_STRAIGHT_96.png',
+    img:'https://stories.hilton.com/uploads/2023/10/Hilton-Honors-American-Express-Surpass-Card.jpg',
     grad:'linear-gradient(135deg,#003366 0%,#005cb8 60%,#2b8fd4 100%)',
     clr:'#005cb8', fee:150,
     notionId:'1a96f65c-9f28-80e9-b7bb-c5ae112261d2'
@@ -1313,11 +1313,12 @@ function renderCardView(visible){
       const _openMo=parseInt(_openDateStr.slice(5,7),10);
       const _MO=['一','二','三','四','五','六','七','八','九','十','十一','十二'];
       const _feeMonthStr=fee?`每年 ${_MO[_openMo-1]} 月`:'免年費';
+      const _feeAmtStr=fee?` · $${fee.toLocaleString()}`:'';
       const _heldLabel=heldStr?heldStr.replace('持卡 ',''):'';
       cardInfoHtml=`<div class="cc-card-info">
         <div class="cc-card-info-item"><div class="cc-card-info-label">開卡日</div><div class="cc-card-info-val">${_openDateStr}</div></div>
         ${_heldLabel?`<div class="cc-card-info-item"><div class="cc-card-info-label">持卡時間</div><div class="cc-card-info-val">${_heldLabel}</div></div>`:''}
-        <div class="cc-card-info-item"><div class="cc-card-info-label">年費月份</div><div class="cc-card-info-val">${_feeMonthStr}</div></div>
+        <div class="cc-card-info-item"><div class="cc-card-info-label">年費月份</div><div class="cc-card-info-val">${_feeMonthStr}<span style="color:var(--muted);font-weight:500">${_feeAmtStr}</span></div></div>
       </div>`;
     }
 
