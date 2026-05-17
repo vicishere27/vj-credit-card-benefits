@@ -417,7 +417,12 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
     </div>
     <div class="form-group">
       <label>完成者</label>
-      <input type="text" id="completePersonInput" placeholder="Vic">
+      <select id="completePersonInput" style="width:100%;padding:10px 12px;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:8px;font-size:15px;font-family:inherit;color-scheme:dark">
+        <option value="Vic">Vic</option>
+        <option value="Jenny">Jenny</option>
+        <option value="QbQ">QbQ</option>
+        <option value="Amber">Amber</option>
+      </select>
     </div>
     <div class="btn-row">
       <button class="btn btn-primary" onclick="confirmComplete()">✅ 確認完成</button>
@@ -453,7 +458,12 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
     </div>
     <div class="form-group">
       <label>你的名稱（記錄是誰完成的）</label>
-      <input type="text" id="inputName" placeholder="Vic">
+      <select id="inputName" style="width:100%;padding:10px 12px;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:8px;font-size:15px;font-family:inherit;color-scheme:dark">
+        <option value="Vic">Vic</option>
+        <option value="Jenny">Jenny</option>
+        <option value="QbQ">QbQ</option>
+        <option value="Amber">Amber</option>
+      </select>
     </div>
     <div class="btn-row">
       <button class="btn btn-primary" onclick="saveSettings()">儲存</button>
