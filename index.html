@@ -557,10 +557,10 @@ const CARD_INFO = {
     clr:'#0052a5', fee:150,
     notionId:'5afb5ee0-3909-4f63-aa0c-f80cf58ceef3'
   },
-  'Amex Hilton Surpass #2 NLL':{
-    img:'https://stories.hilton.com/uploads/2023/10/Hilton-Honors-American-Express-Surpass-Card.jpg',
-    grad:'linear-gradient(135deg,#003366 0%,#005cb8 60%,#2b8fd4 100%)',
-    clr:'#005cb8', fee:150,
+  'Amex Hilton Aspire #2':{
+    img:'https://upgradedpoints.com/wp-content/uploads/2020/06/hilton-honors-aspire-MConverter.eu_.jpg',
+    grad:'linear-gradient(135deg,#0a0a1a 0%,#1a1a3e 50%,#2d2d6e 100%)',
+    clr:'#4a4aaa', fee:550,
     notionId:'1a96f65c-9f28-80e9-b7bb-c5ae112261d2'
   },
   'Amex Hilton Aspire':{
@@ -639,7 +639,7 @@ const CARD_DATES = {
   'Jenny::Amex Gold':                '2022-05-27',
   'Vic::Amex Marriott Brilliant':    '2023-08-04',
   'Vic::Amex Hilton Surpass #1':     '2022-05-27',
-  'Vic::Amex Hilton Surpass #2 NLL': '2025-03-01',
+  'Vic::Amex Hilton Aspire #2':      '2025-03-01',
   'Vic::Amex Hilton Aspire':         '2025-12-11',
   'Vic::Amex Gold #2':               '2020-10-15',
   'Vic::Chase Freedom Flex':         '2022-01-11',
@@ -663,7 +663,8 @@ const CARD_DATES = {
 // CARD NOTES（升級紀錄、特殊備注）
 // ================================================================
 const CARD_NOTES = {
-  'Vic::Amex Gold #2': '原 Amex Green（2020-10-15 開卡），2025-11-07 升級至 Amex Gold Rose',
+  'Vic::Amex Gold #2':        '原 Amex Green（2020-10-15 開卡），2025-11-07 升級至 Amex Gold Rose',
+  'Vic::Amex Hilton Aspire #2': '原 Amex Hilton Surpass NLL（2025-03-01 開卡），2026-03-09 升級至 Hilton Aspire',
 };
 
 
@@ -682,7 +683,11 @@ const BENEFITS = [
 
   // ── QUARTERLY ────────────────────────────────────────────────────
   {id:'vic-surpass1-q',   person:'Vic',   card:'Amex Hilton Surpass #1',      name:'Hilton Resort Credit', amt:50,  freq:'quarterly', cat:'飯店', notes:'在 Hilton 旗下度假村直接消費（非第三方訂房）'},
-  {id:'vic-surpass2-q',   person:'Vic',   card:'Amex Hilton Surpass #2 NLL',  name:'Hilton Resort Credit', amt:50,  freq:'quarterly', cat:'飯店', notes:'在 Hilton 旗下度假村直接消費（非第三方訂房）'},
+  {id:'vic-aspire2-flight',     person:'Vic', card:'Amex Hilton Aspire #2', name:'航班 Credit',                          amt:50,  freq:'quarterly', cat:'機票', notes:'直接向航空公司購票，或透過 amextravel.com'},
+  {id:'vic-aspire2-resort-h1', person:'Vic', card:'Amex Hilton Aspire #2', name:'Hilton Resort Credit（上半年）',         amt:200, freq:'semi', half:1, cat:'飯店', notes:'在參與 Hilton Resorts 直接消費 1-6月（合計 $400/年）'},
+  {id:'vic-aspire2-resort-h2', person:'Vic', card:'Amex Hilton Aspire #2', name:'Hilton Resort Credit（下半年）',         amt:200, freq:'semi', half:2, cat:'飯店', notes:'在參與 Hilton Resorts 直接消費 7-12月（合計 $400/年）'},
+  {id:'vic-aspire2-clear',     person:'Vic', card:'Amex Hilton Aspire #2', name:'CLEAR+ Credit',                          amt:209, freq:'annual', cat:'旅行', notes:'支付 CLEAR+ 年費時自動抵扣（全額）'},
+  {id:'vic-aspire2-freenight', person:'Vic', card:'Amex Hilton Aspire #2', name:'年度免費房晚',                           amt:0,   freq:'annual', cat:'飯店', notes:'每年 renewal 後取得，可用於高端 Hilton 物業', nm:true},
   {id:'vic-aspire-flight',person:'Vic',   card:'Amex Hilton Aspire',          name:'航班 Credit',          amt:50,  freq:'quarterly', cat:'機票', notes:'直接向航空公司購票，或透過 amextravel.com'},
   {id:'vic-cff-5x',       person:'Vic',   card:'Chase Freedom Flex',          name:'5% 加速類別',          amt:75,  freq:'quarterly', cat:'現金回饋', notes:'Q1: 餐廳/Norwegian | Q2: Amazon/Chase Travel\nQ3/Q4 待公布｜上限 $1,500 = 最多 $75', activation:'⚡ 每季必須到 Chase 網站 Activate！'},
   {id:'jenny-cff-5x',     person:'Jenny', card:'Chase Freedom Flex',          name:'5% 加速類別',          amt:75,  freq:'quarterly', cat:'現金回饋', notes:'Q1: 餐廳/Norwegian | Q2: Amazon/Chase Travel\nQ3/Q4 待公布｜上限 $1,500 = 最多 $75', activation:'⚡ 每季必須到 Chase 網站 Activate！'},
