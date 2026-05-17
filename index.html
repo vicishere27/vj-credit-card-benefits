@@ -105,6 +105,8 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 .cc-tile-name{font-size:14px;font-weight:800;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.8);line-height:1.2;letter-spacing:-.2px}
 .cc-tile-person{font-size:10px;color:rgba(255,255,255,.85);font-weight:600;display:flex;align-items:center;gap:5px;text-transform:uppercase;letter-spacing:.4px}
 .cc-tile-badge{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.55);backdrop-filter:blur(8px);border-radius:8px;padding:4px 10px;font-size:11px;font-weight:800;color:#fff;letter-spacing:.2px}
+.cc-tile-held{font-size:10px;color:rgba(255,255,255,.55);letter-spacing:.2px;margin-top:1px}
+.cc-tile-note{font-size:9px;color:rgba(255,255,255,.45);font-style:italic;margin-top:2px;line-height:1.4}
 .cc-item.all-done .cc-tile-badge{background:rgba(34,197,94,.6);color:#fff}
 
 /* ROI bar */
@@ -339,6 +341,12 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 .a-stat{font-size:11px;color:var(--muted);min-width:28px;text-align:right}
 .a-todo{font-size:11px;color:var(--muted);padding:1px 0 3px 50px;line-height:1.4}
 @media(max-width:640px){.announce-wrap{margin:8px 12px 0}}
+/* ---- FEE REMIND ---- */
+.fee-remind-row{display:flex;align-items:center;gap:8px;font-size:12px;flex-wrap:wrap;padding:2px 0}
+.fee-remind-person{display:flex;align-items:center;gap:4px;font-weight:700;min-width:52px;flex-shrink:0}
+.fee-remind-card{flex:1;min-width:100px;font-weight:500}
+.fee-remind-fee{font-weight:800;color:#fbbf24;min-width:44px;text-align:right;flex-shrink:0}
+.fee-remind-date{font-size:11px;min-width:90px;text-align:right;flex-shrink:0}
 </style>
 </head>
 <body>
@@ -383,6 +391,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 
 <!-- ==================== ANNOUNCE ==================== -->
 <div id="announceBar"></div>
+<div id="feeRemindBar"></div>
 
 <!-- ==================== MAIN ==================== -->
 <div id="main"></div>
@@ -505,79 +514,130 @@ const CARD_INFO = {
   'Amex Gold':{
     img:'https://upgradedpoints.com/wp-content/uploads/2018/10/Amex-Gold-Card-Art-Solo.jpg',
     grad:'linear-gradient(135deg,#7a5010 0%,#b8820e 40%,#e8c24a 70%,#b8820e 100%)',
-    clr:'#c9960f', fee:325
+    clr:'#c9960f', fee:325,
+    notionId:'c1964f74-3a72-4d27-bea7-794c148eb7e0'
   },
   'Amex Marriott Brilliant':{
     img:'https://upgradedpoints.com/wp-content/uploads/2020/08/Marriott-Bonvoy-Brilliant-9222022.png',
     grad:'linear-gradient(135deg,#2c1654 0%,#6a2580 50%,#9c4dca 100%)',
-    clr:'#8b44cc', fee:650
+    clr:'#8b44cc', fee:650,
+    notionId:'c2a83ea8-8e06-4fb1-9e7c-6cbae68728c9'
   },
   'Amex Hilton Surpass #1':{
     img:null,
     grad:'linear-gradient(135deg,#002B5B 0%,#0052a5 60%,#2b8fd4 100%)',
-    clr:'#0052a5', fee:150
+    clr:'#0052a5', fee:150,
+    notionId:'5afb5ee0-3909-4f63-aa0c-f80cf58ceef3'
   },
   'Amex Hilton Surpass #2 NLL':{
     img:null,
     grad:'linear-gradient(135deg,#003366 0%,#005cb8 60%,#2b8fd4 100%)',
-    clr:'#005cb8', fee:150
+    clr:'#005cb8', fee:150,
+    notionId:'1a96f65c-9f28-80e9-b7bb-c5ae112261d2'
   },
   'Amex Hilton Aspire':{
     img:'https://upgradedpoints.com/wp-content/uploads/2020/06/hilton-honors-aspire-MConverter.eu_.jpg',
     grad:'linear-gradient(135deg,#0a0a1a 0%,#1a1a3e 50%,#2d2d6e 100%)',
-    clr:'#4a4aaa', fee:550
+    clr:'#4a4aaa', fee:550,
+    notionId:'2c86f65c-9f28-80f1-8892-d4cd1b6d9d3a'
   },
-  'Amex Green':{
-    img:null,
-    grad:'linear-gradient(135deg,#1a5f3f 0%,#2e8b57 60%,#3dbb76 100%)',
-    clr:'#2e8b57', fee:150
+  'Amex Gold #2':{
+    img:'https://www.aexp-static.com/online/myca/shared/summary/cardasset/images/NUS000000174_480x304_STRAIGHT_96.png',
+    grad:'linear-gradient(135deg,#5a3c08 0%,#9a6e0c 40%,#d4aa3a 70%,#9a6e0c 100%)',
+    clr:'#b87c0a', fee:325,
+    notionId:'e8981257-e4b3-4ab3-ba15-b984b0d955fb'
   },
   'Chase Freedom Flex':{
     img:null,
     grad:'linear-gradient(135deg,#003087 0%,#0063BE 60%,#4da6ff 100%)',
-    clr:'#0063BE', fee:0
+    clr:'#0063BE', fee:0,
+    notionId:'7578309f-dd87-4de0-adc4-b2dfe97bcd12'
   },
   'Chase Sapphire Reserve':{
     img:'https://upgradedpoints.com/wp-content/uploads/2025/06/Sapphire-Reserve.png',
     grad:'linear-gradient(135deg,#1c1c1c 0%,#3a3a3a 50%,#5c5c5c 100%)',
-    clr:'#888888', fee:550
+    clr:'#888888', fee:550,
+    notionId:null
   },
   'Chase Sapphire Preferred':{
     img:'https://upgradedpoints.com/wp-content/uploads/2020/09/sapphire-preferred.png',
     grad:'linear-gradient(135deg,#005691 0%,#0073b1 60%,#1a9fd4 100%)',
-    clr:'#0073b1', fee:95
+    clr:'#0073b1', fee:95,
+    notionId:'1ab578a0-303f-4d63-bde1-0748a87e261e'
   },
   'Chase Marriott Boundless':{
     img:null,
     grad:'linear-gradient(135deg,#003366 0%,#004d99 60%,#0066cc 100%)',
-    clr:'#004d99', fee:95
+    clr:'#004d99', fee:95,
+    notionId:'175b7ae0-fafb-46ea-9528-377cb12837be'
   },
   'Chase IHG Premier':{
     img:null,
     grad:'linear-gradient(135deg,#004B6B 0%,#006B93 60%,#1a8bb5 100%)',
-    clr:'#006B93', fee:99
+    clr:'#006B93', fee:99,
+    notionId:'4601f333-28fc-47a5-9188-87365f274d11'
   },
   'Chase Southwest Priority':{
     img:null,
     grad:'linear-gradient(135deg,#304CB2 0%,#4060c8 55%,#c81230 100%)',
-    clr:'#304CB2', fee:149
+    clr:'#304CB2', fee:149,
+    notionId:'1156f65c-9f28-808d-a41a-f86d5dff22cc'
   },
   'BoA Premium Rewards Elite':{
     img:'https://upgradedpoints.com/wp-content/uploads/2021/12/Bank-of-America-Premium-Rewards-Elite-Credit-Card.jpg',
     grad:'linear-gradient(135deg,#5c1a1a 0%,#8B0000 50%,#CC0000 100%)',
-    clr:'#CC0000', fee:550
+    clr:'#CC0000', fee:550,
+    notionId:'15f6f65c-9f28-8040-9164-db10ab8e6160'
   },
   'BoA Premium Rewards':{
     img:null,
     grad:'linear-gradient(135deg,#8B0000 0%,#CC0000 60%,#E31837 100%)',
-    clr:'#E31837', fee:95
+    clr:'#E31837', fee:99,
+    notionId:'2136f65c-9f28-80d4-9c71-da3f51bd569d'
   },
   'Citi Premier':{
     img:null,
     grad:'linear-gradient(135deg,#003B79 0%,#004FA3 60%,#1a6cbf 100%)',
-    clr:'#004FA3', fee:95
+    clr:'#004FA3', fee:95,
+    notionId:'60f87088-3a8d-464f-8ede-603d0c2427f0'
   },
 };
+
+// ================================================================
+// CARD OPEN DATES (from Notion, used as defaults for holding-years)
+// ================================================================
+const CARD_DATES = {
+  'Vic::Amex Gold':                  '2022-05-27',
+  'Jenny::Amex Gold':                '2022-05-27',
+  'Vic::Amex Marriott Brilliant':    '2023-08-04',
+  'Vic::Amex Hilton Surpass #1':     '2022-05-27',
+  'Vic::Amex Hilton Surpass #2 NLL': '2025-03-01',
+  'Vic::Amex Hilton Aspire':         '2025-12-11',
+  'Vic::Amex Gold #2':               '2020-10-15',
+  'Vic::Chase Freedom Flex':         '2022-01-11',
+  'Jenny::Chase Freedom Flex':       '2022-01-11',
+  'Vic::Chase Sapphire Preferred':   '2021-05-27',
+  'Jenny::Chase Sapphire Preferred': '2021-05-27',
+  'Vic::Chase Marriott Boundless':   '2020-11-20',
+  'Vic::Chase IHG Premier':          '2021-10-28',
+  'Jenny::Chase IHG Premier':        '2023-07-27',
+  'Vic::Chase Southwest Priority':   '2024-10-04',
+  'Jenny::Chase Southwest Priority': '2024-06-21',
+  'Vic::BoA Premium Rewards Elite':  '2024-12-16',
+  'Jenny::BoA Premium Rewards Elite':'2023-12-08',
+  'Vic::BoA Premium Rewards':        '2025-06-14',
+  'Vic::Citi Premier':               '2022-01-07',
+  'Jenny::Citi Premier':             '2022-01-07',
+  'Jenny::Chase Sapphire Reserve':   '2025-12-01',
+};
+
+// ================================================================
+// CARD NOTES（升級紀錄、特殊備注）
+// ================================================================
+const CARD_NOTES = {
+  'Vic::Amex Gold #2': '原 Amex Green（2020-10-15 開卡），2025-11-07 升級至 Amex Gold Rose',
+};
+
 
 // ================================================================
 // BENEFITS DATA
@@ -618,8 +678,12 @@ const BENEFITS = [
   {id:'vic-aspire-freenight',   person:'Vic',   card:'Amex Hilton Aspire',          name:'年度免費房晚',                           amt:0,   freq:'annual', cat:'飯店', notes:'每年 renewal 後取得，可用於高端 Hilton 物業', nm:true},
   {id:'vic-brilliant-freenight',person:'Vic',   card:'Amex Marriott Brilliant',     name:'年度免費房晚（85K pts）',                amt:0,   freq:'annual', cat:'飯店', notes:'每年 renewal 後取得，含 Ritz-Carlton / St. Regis', nm:true},
   {id:'vic-brilliant-ritz',     person:'Vic',   card:'Amex Marriott Brilliant',     name:'Ritz/St.Regis 物業 Credit',              amt:100, freq:'annual', cat:'飯店', notes:'需至少連住 2 晚，透過 booking.marriott.com 直訂'},
-  {id:'vic-green-loungebuddy',  person:'Vic',   card:'Amex Green',                  name:'LoungeBuddy Credit',                     amt:100, freq:'annual', cat:'旅行', notes:'購買單次機場貴賓室入場券'},
-  {id:'vic-green-clear',        person:'Vic',   card:'Amex Green',                  name:'CLEAR+ Credit',                          amt:209, freq:'annual', cat:'旅行', notes:'⚠️ 和 Aspire 重複，兩張只能選一張使用！'},
+  // ── Amex Gold #2（原 Amex Green，2020-10-15 轉卡至 Gold）────────────────
+  {id:'vic-gold2-dining',   person:'Vic', card:'Amex Gold #2', name:'餐廳 Credit',        amt:10,  freq:'monthly',  cat:'餐廳', notes:'Grubhub / Buffalo Wild Wings / Five Guys / Cheesecake Factory / Wonder'},
+  {id:'vic-gold2-uber',     person:'Vic', card:'Amex Gold #2', name:'Uber Cash',          amt:10,  freq:'monthly',  cat:'交通', notes:'加到 Uber 帳號，可用 Uber / Uber Eats'},
+  {id:'vic-gold2-dunkin',   person:'Vic', card:'Amex Gold #2', name:"Dunkin' Credit",     amt:7,   freq:'monthly',  cat:'餐廳', notes:"美國任何 Dunkin' 消費"},
+  {id:'vic-gold2-resy-h1',  person:'Vic', card:'Amex Gold #2', name:'Resy Credit（上半年）', amt:50, freq:'semi', half:1, cat:'餐廳', notes:'Resy 平台訂位並用此卡消費 1-6月'},
+  {id:'vic-gold2-resy-h2',  person:'Vic', card:'Amex Gold #2', name:'Resy Credit（下半年）', amt:50, freq:'semi', half:2, cat:'餐廳', notes:'Resy 平台訂位並用此卡消費 7-12月'},
   {id:'vic-ihg-freenight',      person:'Vic',   card:'Chase IHG Premier',           name:'年度免費房晚（40K pts）',                amt:0,   freq:'annual', cat:'飯店', notes:'每年 anniversary 後取得', nm:true},
   {id:'vic-boundless-freenight',person:'Vic',   card:'Chase Marriott Boundless',    name:'年度免費房晚（35K pts）',                amt:0,   freq:'annual', cat:'飯店', notes:'每年 anniversary 後取得', nm:true},
   {id:'vic-boa-elite-airline',  person:'Vic',   card:'BoA Premium Rewards Elite',   name:'航空附加費 Credit',                      amt:300, freq:'annual', cat:'機票', notes:'行李費 / 座位升級 / 機上消費等航空附加費'},
@@ -669,6 +733,15 @@ function load(){
     S.userName=d.userName||'Vic';
     S.cardStatus=d.cardStatus||{};
   }catch(e){}
+  // Pre-populate open dates from Notion if not yet manually set
+  Object.entries(CARD_DATES).forEach(([key,openDate])=>{
+    if(!S.cardStatus[key]) S.cardStatus[key]={};
+    if(!S.cardStatus[key].openDate) S.cardStatus[key].openDate=openDate;
+  });
+  Object.entries(CARD_NOTES).forEach(([key,note])=>{
+    if(!S.cardStatus[key]) S.cardStatus[key]={};
+    if(!S.cardStatus[key].notes) S.cardStatus[key].notes=note;
+  });
 }
 function save(){
   localStorage.setItem('fcc_v3',JSON.stringify({
@@ -877,61 +950,195 @@ function setPerson(p){S.person=p;render()}
 function setFreq(f){S.freq=f;render()}
 
 // ================================================================
-// ANNOUNCE BAR
+// HOLDING YEARS HELPER
+// ================================================================
+function cardHeldStr(person,card){
+  const key=`${person}::${card}`;
+  const openDate=(S.cardStatus[key]&&S.cardStatus[key].openDate)||null;
+  if(!openDate) return null;
+  const open=new Date(openDate+'T00:00:00');
+  const now=new Date();
+  let months=(now.getFullYear()-open.getFullYear())*12+(now.getMonth()-open.getMonth());
+  if(months<=0) return null;
+  const years=Math.floor(months/12);
+  const mo=months%12;
+  if(years>0&&mo>0) return `持卡 ${years}年${mo}月`;
+  if(years>0) return `持卡 ${years}年`;
+  return `持卡 ${mo}月`;
+}
+
+
+// ================================================================
+// ANNOUNCE BAR（月度 + 季度 + 半年 + 年度福利截止提醒）
 // ================================================================
 function buildAnnounceBar(){
   const bar=document.getElementById('announceBar');
   const today=new Date();
   const day=today.getDate();
-  if(day<15){bar.innerHTML='';return;}
+  const month=today.getMonth()+1;
+  const yr=today.getFullYear();
+  const daysInMonth=new Date(yr,month,0).getDate();
+  const daysLeft=daysInMonth-day;
 
-  const isEnd=day>=25;
-  const dismissKey=`ann_${S.year}_${S.month}_${isEnd?'end':'mid'}`;
+  // Helper：抓某頻率的未完成統計
+  function getRows(freq,periodKey,halfVal){
+    const persons=[{name:'Vic',color:'#6366f1'},{name:'Jenny',color:'#ec4899'},{name:'QbQ',color:'#f59e0b'},{name:'Amber',color:'#10b981'}];
+    return persons.map(({name,color})=>{
+      let mine=BENEFITS.filter(b=>b.person===name&&b.freq===freq&&isCardActive(b.card,b.person));
+      if(halfVal!==undefined) mine=mine.filter(b=>b.half===halfVal);
+      if(freq==='annual') mine=mine.filter(b=>!b.nm&&!b.auto);
+      if(!mine.length) return null;
+      const done=mine.filter(b=>S.completions[`${b.id}__${periodKey}`]).length;
+      const undone=mine.filter(b=>!S.completions[`${b.id}__${periodKey}`]);
+      return {name,color,total:mine.length,done,undone};
+    }).filter(Boolean);
+  }
+
+  // Helper：產生一個 announce 區塊 HTML
+  function makeSection(dismissKey,typeClass,icon,title,rows){
+    if(sessionStorage.getItem(dismissKey)) return '';
+    if(!rows.length||rows.every(r=>r.done===r.total)) return '';
+    const isEnd=typeClass==='end';
+    const rowsHtml=rows.map(r=>{
+      const pct=Math.round(r.done/r.total*100);
+      const allDone=r.done===r.total;
+      const todoStr=r.undone.slice(0,3).map(b=>b.name).join('、')+(r.undone.length>3?` +${r.undone.length-3}項`:'');
+      return `<div class="a-row">
+        <span class="a-name" style="color:${r.color}">${r.name}</span>
+        <div class="a-prog"><div class="a-fill" style="width:${pct}%;background:${allDone?'var(--done)':r.color}"></div></div>
+        <span class="a-stat">${r.done}/${r.total}</span>
+        <span style="font-size:12px">${allDone?'✅':isEnd?'⚡':''}</span>
+      </div>${!allDone?`<div class="a-todo">未完成：${todoStr}</div>`:''}`;
+    }).join('');
+    return `<div class="announce-wrap ${typeClass}">
+      <div class="announce-head">
+        <span>${icon}</span><span class="a-title">${title}</span>
+        <button class="announce-x" onclick="dismissAnnounce('${dismissKey}')">✕</button>
+      </div>
+      <div class="announce-rows">${rowsHtml}</div>
+    </div>`;
+  }
+
+  let html='';
+
+  // ── 月度：每月 15 日起 ──
+  if(day>=15){
+    const isEnd=day>=25;
+    const dk=`ann_${yr}_${month}_${isEnd?'end':'mid'}`;
+    const periodKey=`${yr}-${pad(month)}`;
+    const rows=getRows('monthly',periodKey);
+    html+=makeSection(dk,isEnd?'end':'mid',isEnd?'🔴':'🟡',
+      isEnd?`月底倒計時 — 還剩 ${daysLeft} 天！`:`月中提醒 — 還剩 ${daysLeft} 天`,rows);
+  }
+
+  // ── 季度：季末月份最後 14 天（3/6/9/12月）──
+  if([3,6,9,12].includes(month)&&daysLeft<=14){
+    const q=Math.ceil(month/3);
+    const dk=`ann_${yr}_Q${q}_end`;
+    const rows=getRows('quarterly',`${yr}-Q${q}`);
+    html+=makeSection(dk,daysLeft<=7?'end':'mid',daysLeft<=7?'🔴':'🟡',
+      `🟣 Q${q} 季度福利截止 — 還剩 ${daysLeft} 天`,rows);
+  }
+
+  // ── 半年：6 月 / 12 月最後 14 天 ──
+  if([6,12].includes(month)&&daysLeft<=14){
+    const h=month<=6?1:2;
+    const dk=`ann_${yr}_H${h}_end`;
+    const rows=getRows('semi',`${yr}-H${h}`,h);
+    html+=makeSection(dk,daysLeft<=7?'end':'mid',daysLeft<=7?'🔴':'🟡',
+      `🔵 ${h===1?'上':'下'}半年福利截止 — 還剩 ${daysLeft} 天`,rows);
+  }
+
+  // ── 年度：12 月整月 ──
+  if(month===12){
+    const dk=`ann_${yr}_annual_end`;
+    const rows=getRows('annual',`${yr}`);
+    html+=makeSection(dk,daysLeft<=14?'end':'mid',daysLeft<=14?'🔴':'🟡',
+      `🟢 年度福利截止 — 還剩 ${daysLeft} 天`,rows);
+  }
+
+  bar.innerHTML=html;
+}
+
+function dismissAnnounce(key){
+  sessionStorage.setItem(key,'1');
+  buildAnnounceBar();
+}
+
+// ================================================================
+// ANNUAL FEE REMINDER（60 天內到期的年費提醒）
+// ================================================================
+function calcNextAnniversary(openDateStr){
+  const open=new Date(openDateStr+'T00:00:00');
+  const today=new Date(); today.setHours(0,0,0,0);
+  const yr=today.getFullYear();
+  let ann=new Date(yr,open.getMonth(),open.getDate());
+  if(ann<today) ann=new Date(yr+1,open.getMonth(),open.getDate());
+  return ann;
+}
+function daysUntil(date){
+  const today=new Date(); today.setHours(0,0,0,0);
+  return Math.ceil((date-today)/86400000);
+}
+
+function buildFeeReminderBar(){
+  const bar=document.getElementById('feeRemindBar');
+  const seen=new Set();
+  const reminders=[];
+
+  BENEFITS.forEach(b=>{
+    const pk=`${b.person}::${b.card}`;
+    if(seen.has(pk)) return;
+    seen.add(pk);
+    const info=CARD_INFO[b.card];
+    if(!info||!info.fee) return;
+    // Check card is active today
+    const st=S.cardStatus[pk];
+    const todayStr=new Date().toISOString().slice(0,10);
+    if(st&&st.openDate&&st.openDate>todayStr) return;
+    if(st&&st.closeDate&&st.closeDate<todayStr) return;
+    const openDate=(st&&st.openDate)||null;
+    if(!openDate) return;
+    const ann=calcNextAnniversary(openDate);
+    const days=daysUntil(ann);
+    if(days>=0&&days<=60) reminders.push({person:b.person,card:b.card,fee:info.fee,ann,days});
+  });
+
+  if(!reminders.length){bar.innerHTML='';return;}
+  reminders.sort((a,b)=>a.days-b.days);
+
+  const today=new Date();
+  const dismissKey=`fee_rem_${today.getFullYear()}_${today.getMonth()+1}`;
   if(sessionStorage.getItem(dismissKey)){bar.innerHTML='';return;}
 
-  const monthTotal=new Date(S.year,S.month,0).getDate();
-  const daysLeft=monthTotal-day;
-  const periodKey=`${S.year}-${String(S.month).padStart(2,'0')}`;
-  const persons=[{name:'Vic',color:'#6366f1'},{name:'Jenny',color:'#ec4899'},{name:'QbQ',color:'#f59e0b'},{name:'Amber',color:'#10b981'}];
+  const urgent=reminders.some(r=>r.days<=14);
 
-  const rows=persons.map(({name,color})=>{
-    const mine=BENEFITS.filter(b=>b.person===name&&b.freq==='monthly'&&isCardActive(b.card,b.person));
-    if(!mine.length) return null;
-    const done=mine.filter(b=>S.completions[`${b.id}__${periodKey}`]).length;
-    const undone=mine.filter(b=>!S.completions[`${b.id}__${periodKey}`]);
-    return {name,color,total:mine.length,done,undone};
-  }).filter(Boolean);
-
-  if(!rows.length||rows.every(r=>r.done===r.total)){bar.innerHTML='';return;}
-
-  const typeClass=isEnd?'end':'mid';
-  const icon=isEnd?'🔴':'🟡';
-  const titleTxt=isEnd?`月底倒計時 — 還剩 ${daysLeft} 天！`:`月中提醒 — 還剩 ${daysLeft} 天`;
-
-  const rowsHtml=rows.map(r=>{
-    const pct=Math.round(r.done/r.total*100);
-    const allDone=r.done===r.total;
-    const todoStr=r.undone.slice(0,3).map(b=>b.name).join('、')+(r.undone.length>3?` +${r.undone.length-3}項`:'');
-    return `<div class="a-row">
-      <span class="a-name" style="color:${r.color}">${r.name}</span>
-      <div class="a-prog"><div class="a-fill" style="width:${pct}%;background:${allDone?'var(--done)':r.color}"></div></div>
-      <span class="a-stat">${r.done}/${r.total}</span>
-      <span style="font-size:12px">${allDone?'✅':isEnd?'⚡':''}</span>
-    </div>${!allDone?`<div class="a-todo">未完成：${todoStr}</div>`:''}`;
+  const rowsHtml=reminders.map(r=>{
+    const dotClass=`dot-${r.person.toLowerCase()}`;
+    const clr=r.days<=14?'var(--danger)':r.days<=30?'var(--warn)':'var(--muted)';
+    const dateStr=r.ann.toLocaleDateString('zh-TW',{month:'short',day:'numeric'});
+    const daysStr=r.days===0?'今天！':`${r.days} 天後`;
+    return `<div class="fee-remind-row">
+      <span class="fee-remind-person"><span class="dot ${dotClass}"></span>${r.person}</span>
+      <span class="fee-remind-card">${r.card}</span>
+      <span class="fee-remind-fee">$${r.fee.toLocaleString()}</span>
+      <span class="fee-remind-date" style="color:${clr}">${dateStr}（${daysStr}）</span>
+    </div>`;
   }).join('');
 
-  bar.innerHTML=`<div class="announce-wrap ${typeClass}">
+  bar.innerHTML=`<div class="announce-wrap ${urgent?'end':'mid'}">
     <div class="announce-head">
-      <span>${icon}</span><span class="a-title">${titleTxt}</span>
-      <button class="announce-x" onclick="dismissAnnounce('${dismissKey}')">✕</button>
+      <span>${urgent?'🔴':'🟡'}</span>
+      <span class="a-title">💳 年費到期提醒</span>
+      <button class="announce-x" onclick="dismissFeeRemind('${dismissKey}')">✕</button>
     </div>
     <div class="announce-rows">${rowsHtml}</div>
   </div>`;
 }
 
-function dismissAnnounce(key){
+function dismissFeeRemind(key){
   sessionStorage.setItem(key,'1');
-  document.getElementById('announceBar').innerHTML='';
+  document.getElementById('feeRemindBar').innerHTML='';
 }
 
 function render(){
@@ -945,6 +1152,7 @@ function render(){
   buildPersonTabs();
   buildFreqPills();
   buildAnnounceBar();
+  buildFeeReminderBar();
 
   const visible=BENEFITS.filter(isVisible);
 
@@ -1082,16 +1290,17 @@ function renderCardView(visible){
     const item=document.createElement('div');
     item.className=`cc-item${isOpen?' open':''}${allDone?' all-done':''}`;
 
-    // Card tile: try image, fallback to gradient
+    const imgUrl=info.img||null;
     let tileContent;
-    if(info.img){
+    if(imgUrl){
       tileContent=`
-        <img class="cc-tile-img" src="${info.img}" alt="${card}"
+        <img class="cc-tile-img" src="${imgUrl}" alt="${card}"
           onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
         <div class="cc-tile-grad" style="background:${info.grad};display:none;width:100%;height:100%"></div>`;
     }else{
       tileContent=`<div class="cc-tile-grad" style="background:${info.grad};width:100%;height:100%"></div>`;
     }
+    const heldStr=cardHeldStr(person,card);
 
     const pendingTxt=allDone?'✅ 全部完成':`${totalCnt-doneCount} 項待完成`;
 
@@ -1107,12 +1316,15 @@ function renderCardView(visible){
         </div>
       </div>`;
 
+    const cardNote=(S.cardStatus[cardKey]&&S.cardStatus[cardKey].notes)||null;
     item.innerHTML=`
       <div class="cc-tile" onclick="toggleAcc('${cardKey}')">
         ${tileContent}
         <div class="cc-tile-overlay">
           <div class="cc-tile-name">${card}</div>
           <div class="cc-tile-person"><span class="dot ${dotClass}"></span>${person}</div>
+          ${heldStr?`<div class="cc-tile-held">${heldStr}</div>`:''}
+          ${cardNote?`<div class="cc-tile-note">${cardNote}</div>`:''}
         </div>
         <div class="cc-tile-badge">${doneCount}/${totalCnt}</div>
       </div>
@@ -1239,6 +1451,11 @@ async function syncNow(){
     const r2=await fetch(url+'?action=getCardStatus');
     const d2=await r2.json();
     if(d2.cards) Object.assign(S.cardStatus,d2.cards);
+    // Re-apply CARD_DATES defaults: sync may have nulled openDates that weren't in the sheet
+    Object.entries(CARD_DATES).forEach(([key,openDate])=>{
+      if(!S.cardStatus[key]) S.cardStatus[key]={};
+      if(!S.cardStatus[key].openDate) S.cardStatus[key].openDate=openDate;
+    });
     save();render();
     showSync('✅ 同步成功 '+new Date().toLocaleTimeString('zh-TW'),'sync-ok');
   }catch(e){showSync('❌ 失敗：'+e.message,'sync-err')}
