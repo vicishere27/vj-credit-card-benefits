@@ -636,7 +636,7 @@ function load(){
   try{
     const d=JSON.parse(localStorage.getItem('fcc_v3')||'{}');
     S.completions=d.completions||{};
-    S.scriptUrl=d.scriptUrl||'';
+    S.scriptUrl=d.scriptUrl||S.scriptUrl;
     S.userName=d.userName||'Vic';
     S.cardStatus=d.cardStatus||{};
   }catch(e){}
@@ -1139,7 +1139,7 @@ async function pushCardStatusToSheet(key,val){
   try{await fetch(S.scriptUrl,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'setCardStatus',key,val})})}catch{}
 }
 async function syncNow(){
-  const url=document.getElementById('inputUrl').value.trim();
+  const url=S.scriptUrl||(document.getElementById('inputUrl')&&document.getElementById('inputUrl').value.trim())||'';
   if(!url){showSync('請先填入 Apps Script URL','sync-err');return}
   showSync('同步中…','sync-ing');
   try{
@@ -1472,6 +1472,7 @@ function selectDay(ds){
 load();
 const now=new Date();S.year=now.getFullYear();S.month=now.getMonth()+1;
 render();
+if(S.scriptUrl){syncNow();}
 </script>
 </body>
 </html>
