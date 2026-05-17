@@ -323,6 +323,21 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 /* ---- NAV BTN ---- */
 .nav-btn{width:30px;height:30px;border-radius:7px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:.15s}
 .nav-btn:hover{background:rgba(255,255,255,.06);color:var(--text);border-color:rgba(255,255,255,.15)}
+/* ---- Announce Bar ---- */
+.announce-wrap{margin:10px 20px 0;border-radius:12px;overflow:hidden;border:1px solid}
+.announce-wrap.mid{background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.3)}
+.announce-wrap.end{background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.35)}
+.announce-head{display:flex;align-items:center;gap:8px;padding:10px 14px 6px;font-weight:600;font-size:13px}
+.announce-head .a-title{flex:1}
+.announce-x{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;line-height:1;padding:2px 4px}
+.announce-rows{padding:0 14px 10px;display:flex;flex-direction:column;gap:6px}
+.a-row{display:flex;align-items:center;gap:8px;font-size:13px}
+.a-name{width:42px;font-weight:600;flex-shrink:0}
+.a-prog{flex:1;height:5px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden}
+.a-fill{height:100%;border-radius:3px;transition:width .4s}
+.a-stat{font-size:11px;color:var(--muted);min-width:28px;text-align:right}
+.a-todo{font-size:11px;color:var(--muted);padding:1px 0 3px 50px;line-height:1.4}
+@media(max-width:640px){.announce-wrap{margin:8px 12px 0}}
 </style>
 </head>
 <body>
@@ -364,6 +379,9 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
     <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
   </div>
 </div>
+
+<!-- ==================== ANNOUNCE ==================== -->
+<div id="announceBar"></div>
 
 <!-- ==================== MAIN ==================== -->
 <div id="main"></div>
@@ -857,6 +875,64 @@ function buildFreqPills(){
 function setPerson(p){S.person=p;render()}
 function setFreq(f){S.freq=f;render()}
 
+// ================================================================
+// ANNOUNCE BAR
+// ================================================================
+function buildAnnounceBar(){
+  const bar=document.getElementById('announceBar');
+  const today=new Date();
+  const day=today.getDate();
+  if(day<15){bar.innerHTML='';return;}
+
+  const isEnd=day>=25;
+  const dismissKey=`ann_${S.year}_${S.month}_${isEnd?'end':'mid'}`;
+  if(localStorage.getItem(dismissKey)){bar.innerHTML='';return;}
+
+  const monthTotal=new Date(S.year,S.month,0).getDate();
+  const daysLeft=monthTotal-day;
+  const periodKey=`${S.year}-${String(S.month).padStart(2,'0')}`;
+  const persons=[{name:'Vic',color:'#6366f1'},{name:'Jenny',color:'#ec4899'},{name:'QbQ',color:'#f59e0b'},{name:'Amber',color:'#10b981'}];
+
+  const rows=persons.map(({name,color})=>{
+    const mine=BENEFITS.filter(b=>b.person===name&&b.freq==='monthly'&&isCardActive(b.card,b.person));
+    if(!mine.length) return null;
+    const done=mine.filter(b=>S.completions[`${b.id}__${periodKey}`]).length;
+    const undone=mine.filter(b=>!S.completions[`${b.id}__${periodKey}`]);
+    return {name,color,total:mine.length,done,undone};
+  }).filter(Boolean);
+
+  if(!rows.length||rows.every(r=>r.done===r.total)){bar.innerHTML='';return;}
+
+  const typeClass=isEnd?'end':'mid';
+  const icon=isEnd?'🔴':'🟡';
+  const titleTxt=isEnd?`月底倒計時 — 還剩 ${daysLeft} 天！`:`月中提醒 — 還剩 ${daysLeft} 天`;
+
+  const rowsHtml=rows.map(r=>{
+    const pct=Math.round(r.done/r.total*100);
+    const allDone=r.done===r.total;
+    const todoStr=r.undone.slice(0,3).map(b=>b.name).join('、')+(r.undone.length>3?` +${r.undone.length-3}項`:'');
+    return `<div class="a-row">
+      <span class="a-name" style="color:${r.color}">${r.name}</span>
+      <div class="a-prog"><div class="a-fill" style="width:${pct}%;background:${allDone?'var(--done)':r.color}"></div></div>
+      <span class="a-stat">${r.done}/${r.total}</span>
+      <span style="font-size:12px">${allDone?'✅':isEnd?'⚡':''}</span>
+    </div>${!allDone?`<div class="a-todo">未完成：${todoStr}</div>`:''}`;
+  }).join('');
+
+  bar.innerHTML=`<div class="announce-wrap ${typeClass}">
+    <div class="announce-head">
+      <span>${icon}</span><span class="a-title">${titleTxt}</span>
+      <button class="announce-x" onclick="dismissAnnounce('${dismissKey}')">✕</button>
+    </div>
+    <div class="announce-rows">${rowsHtml}</div>
+  </div>`;
+}
+
+function dismissAnnounce(key){
+  localStorage.setItem(key,'1');
+  document.getElementById('announceBar').innerHTML='';
+}
+
 function render(){
   document.getElementById('periodLbl').textContent=periodLabel();
   document.getElementById('vtPerson').classList.toggle('active',S.viewMode==='person');
@@ -867,6 +943,7 @@ function render(){
   document.getElementById('bnavLog').classList.toggle('active',S.viewMode==='log');
   buildPersonTabs();
   buildFreqPills();
+  buildAnnounceBar();
 
   const visible=BENEFITS.filter(isVisible);
 
