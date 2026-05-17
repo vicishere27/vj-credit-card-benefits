@@ -147,6 +147,10 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 .cc-acc-done-info{font-size:9px;color:var(--muted)}
 .cc-acc-tag{display:inline-flex;padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;background:rgba(239,68,68,.12);color:#f87171;margin-top:3px}
 .cc-acc-tag-auto{background:rgba(34,197,94,.12);color:#34d399}
+.cc-card-info{display:flex;flex-wrap:wrap;gap:6px 20px;padding:10px 14px;background:rgba(0,0,0,.3);border-bottom:1px solid rgba(255,255,255,.06)}
+.cc-card-info-item{display:flex;flex-direction:column;gap:2px}
+.cc-card-info-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.cc-card-info-val{font-size:12px;font-weight:700;letter-spacing:-.2px}
 
 /* ---- EMPTY ---- */
 .empty{text-align:center;padding:60px 20px;color:var(--muted)}
@@ -1302,6 +1306,21 @@ function renderCardView(visible){
     }
     const heldStr=cardHeldStr(person,card);
 
+    // Card info block (shown inside accordion)
+    const _openDateStr=(S.cardStatus[cardKey]&&S.cardStatus[cardKey].openDate)||null;
+    let cardInfoHtml='';
+    if(_openDateStr){
+      const _openMo=parseInt(_openDateStr.slice(5,7),10);
+      const _MO=['一','二','三','四','五','六','七','八','九','十','十一','十二'];
+      const _feeMonthStr=fee?`每年 ${_MO[_openMo-1]} 月`:'免年費';
+      const _heldLabel=heldStr?heldStr.replace('持卡 ',''):'';
+      cardInfoHtml=`<div class="cc-card-info">
+        <div class="cc-card-info-item"><div class="cc-card-info-label">開卡日</div><div class="cc-card-info-val">${_openDateStr}</div></div>
+        ${_heldLabel?`<div class="cc-card-info-item"><div class="cc-card-info-label">持卡時間</div><div class="cc-card-info-val">${_heldLabel}</div></div>`:''}
+        <div class="cc-card-info-item"><div class="cc-card-info-label">年費月份</div><div class="cc-card-info-val">${_feeMonthStr}</div></div>
+      </div>`;
+    }
+
     const pendingTxt=allDone?'✅ 全部完成':`${totalCnt-doneCount} 項待完成`;
 
     // ROI bar HTML
@@ -1336,7 +1355,7 @@ function renderCardView(visible){
         </div>
         <span class="cc-chevron">▾</span>
       </div>
-      <div class="cc-acc">${buildAccContent(benefits)}</div>`;
+      <div class="cc-acc">${cardInfoHtml}${buildAccContent(benefits)}</div>`;
 
     grid.appendChild(item);
   });
