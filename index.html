@@ -186,6 +186,14 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 .cert-act-btn.danger:hover{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);color:#f87171}
 .cert-fg-select{width:100%;padding:10px 13px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:9px;font-size:13px;font-family:inherit;outline:none;transition:.15s;color-scheme:dark}
 .cert-fg-select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(99,102,241,.15)}
+.cert-type-btn{flex:1;padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;transition:.15s;text-align:center;white-space:nowrap}
+.cert-type-btn:hover{background:rgba(255,255,255,.05);color:var(--text)}
+.cert-type-btn.active{background:rgba(99,102,241,.15);color:var(--accent);border-color:rgba(99,102,241,.3)}
+.cert-expiry-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:5px;flex-shrink:0;white-space:nowrap}
+.cert-expiry-hot{background:rgba(239,68,68,.12);color:#f87171;border:1px solid rgba(239,68,68,.25)}
+.cert-expiry-warm{background:rgba(245,158,11,.12);color:var(--warn);border:1px solid rgba(245,158,11,.25)}
+.cert-expiry-cool{background:rgba(34,197,94,.1);color:#34d399;border:1px solid rgba(34,197,94,.2)}
+.cert-expiry-gone{background:rgba(100,116,139,.1);color:var(--muted);border:1px solid var(--border)}
 /* ---- MGMT VIEW ---- */
 .mgmt-wrap{padding:14px 16px;display:flex;flex-direction:column;gap:14px;max-width:960px;margin:0 auto}
 .mgmt-topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
@@ -646,9 +654,9 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 
 <!-- ==================== CERT MODAL ==================== -->
 <div class="overlay" id="modal-cert">
-  <div class="modal" style="width:440px">
+  <div class="modal" style="width:460px">
     <div class="modal-head">
-      <h2 id="certModalTitle">🎫 新增房券記錄</h2>
+      <h2 id="certModalTitle">🎫 新增房券</h2>
       <button class="modal-close" onclick="closeModal('cert')">✕</button>
     </div>
     <div class="form-group">
@@ -661,39 +669,69 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
       </select>
     </div>
     <div class="form-group">
+      <label>房券類型</label>
+      <div style="display:flex;gap:8px">
+        <button id="certTypeCardBtn" class="cert-type-btn active" onclick="setCertType('card_benefit')">💳 信用卡年度免費房晚</button>
+        <button id="certTypeHotelBtn" class="cert-type-btn" onclick="setCertType('hotel_voucher')">🏨 飯店回饋房券</button>
+      </div>
+    </div>
+    <div id="certBenefitGroup" class="form-group">
       <label>對應福利（房券來源）</label>
       <select id="certBenefit" class="cert-fg-select"></select>
     </div>
-    <div class="form-group">
-      <label>飯店名稱</label>
-      <input type="text" id="certHotel" placeholder="例：Conrad Bali">
-    </div>
-    <div class="form-group">
-      <label>地點</label>
-      <input type="text" id="certLocation" placeholder="例：峇里島, 印尼">
+    <div id="certVoucherGroup" class="form-group" style="display:none">
+      <label>房券名稱</label>
+      <input type="text" id="certVoucherName" placeholder="例：Marriott Suite Night Award、Conrad 住後回饋券">
     </div>
     <div style="display:flex;gap:10px">
       <div class="form-group" style="flex:1">
-        <label>入住日期</label>
-        <input type="date" id="certCheckIn" onchange="updateCertNights()">
+        <label>發放日期（選填）</label>
+        <input type="date" id="certIssuedDate">
       </div>
       <div class="form-group" style="flex:1">
-        <label>退房日期</label>
-        <input type="date" id="certCheckOut" onchange="updateCertNights()">
+        <label>使用期限</label>
+        <input type="date" id="certExpiryDate">
       </div>
     </div>
     <div class="form-group">
-      <label>晚數</label>
-      <input type="number" id="certNights" min="1" value="1">
-    </div>
-    <div style="display:flex;gap:10px">
-      <div class="form-group" style="flex:1">
-        <label>兌換點數（選填）</label>
-        <input type="number" id="certPoints" min="0" value="0" placeholder="0">
+      <label>使用狀態</label>
+      <div style="display:flex;gap:8px">
+        <button id="certStatusPendingBtn" class="cert-type-btn active" onclick="setCertModalStatus('pending')">⏳ 未使用</button>
+        <button id="certStatusUsedBtn" class="cert-type-btn" onclick="setCertModalStatus('used')">✅ 已使用</button>
       </div>
-      <div class="form-group" style="flex:1">
+    </div>
+    <div id="certUsageSection" style="display:none">
+      <div class="form-group">
+        <label>飯店名稱</label>
+        <input type="text" id="certHotel" placeholder="例：Conrad Bali">
+      </div>
+      <div class="form-group">
+        <label>地點</label>
+        <input type="text" id="certLocation" placeholder="例：峇里島, 印尼">
+      </div>
+      <div style="display:flex;gap:10px">
+        <div class="form-group" style="flex:1">
+          <label>入住日期</label>
+          <input type="date" id="certCheckIn" onchange="updateCertNights()">
+        </div>
+        <div class="form-group" style="flex:1">
+          <label>退房日期</label>
+          <input type="date" id="certCheckOut" onchange="updateCertNights()">
+        </div>
+      </div>
+      <div style="display:flex;gap:10px">
+        <div class="form-group" style="flex:1">
+          <label>晚數</label>
+          <input type="number" id="certNights" min="1" value="1">
+        </div>
+        <div class="form-group" style="flex:1">
+          <label>兌換點數（選填）</label>
+          <input type="number" id="certPoints" min="0" value="0">
+        </div>
+      </div>
+      <div class="form-group">
         <label>估計現金價值 $</label>
-        <input type="number" id="certValue" min="0" value="0" placeholder="0">
+        <input type="number" id="certValue" min="0" value="0">
       </div>
     </div>
     <div class="form-group">
@@ -976,7 +1014,7 @@ const S = {
   cardStatus:{},
   completions:{}, scriptUrl:'https://script.google.com/macros/s/AKfycbw4ziYcJQT3mT5IrzuUziu-DpvMRGZLUPWv8uyt7Unr55gnNNsTA_I_vv73uBhVo_no0w/exec', userName:'Vic',
   certs:[],
-  certFilterYear:'all', certFilterPerson:'all',
+  certFilterYear:'all', certFilterPerson:'all', certFilterStatus:'all',
   mgmtPerson:'all',
 };
 
@@ -2453,90 +2491,113 @@ function saveNewMgmtCard(){
 // CERT (房券) VIEW
 // ================================================================
 let _editCertId=null;
+let _certType='card_benefit';
+let _certModalStatus='pending';
+
+function certExpiryDaysLeft(expiryDate,today){
+  if(!expiryDate) return null;
+  return Math.round((new Date(expiryDate)-new Date(today))/86400000);
+}
+
+function certExpiryBadgeHtml(expiryDate,today){
+  if(!expiryDate) return '';
+  const days=certExpiryDaysLeft(expiryDate,today);
+  let cls,txt;
+  if(days<0){cls='cert-expiry-gone';txt='已過期';}
+  else if(days===0){cls='cert-expiry-hot';txt='今天到期！';}
+  else if(days<=30){cls='cert-expiry-hot';txt=`${days}天後到期`;}
+  else if(days<=90){cls='cert-expiry-warm';txt=`${days}天後到期`;}
+  else{cls='cert-expiry-cool';txt=`${expiryDate.slice(5).replace('-','/')} 到期`;}
+  return `<span class="cert-expiry-badge ${cls}">${txt}</span>`;
+}
+
+function migrateCerts(certs){
+  certs.forEach(c=>{
+    if(!c.type) c.type='card_benefit';
+    if(!c.status) c.status='used';
+  });
+}
 
 function renderCertView(){
   const main=document.getElementById('main');
   main.innerHTML='';
   const filterYear=S.certFilterYear||'all';
   const filterPerson=S.certFilterPerson||'all';
+  const filterStatus=S.certFilterStatus||'all';
   const allCerts=S.certs||[];
+  migrateCerts(allCerts);
+  const today=new Date().toISOString().slice(0,10);
   const curYear=new Date().getFullYear();
   const helperYear=filterYear==='all'?curYear:parseInt(filterYear);
 
   const filtered=allCerts.filter(c=>{
     if(filterPerson!=='all'&&c.person!==filterPerson) return false;
+    const st=c.status||'used';
+    if(filterStatus!=='all'&&st!==filterStatus) return false;
     if(filterYear!=='all'){
-      const yr=c.checkIn?c.checkIn.slice(0,4):'';
-      if(yr!==String(filterYear)) return false;
+      const refDate=st==='used'?(c.checkIn||''):(c.expiryDate||c.issuedDate||'');
+      if(refDate&&refDate.slice(0,4)!==String(filterYear)) return false;
     }
     return true;
   });
+
+  const pendingFiltered=filtered.filter(c=>(c.status||'used')==='pending');
+  const usedFiltered=filtered.filter(c=>(c.status||'used')==='used');
 
   const wrap=document.createElement('div');
   wrap.className='cert-wrap';
 
   // ── 摘要小幫手 ──
-  let html=buildCertHelper(helperYear,allCerts,filterYear);
+  let html=buildCertHelper(helperYear,allCerts,filterYear,today);
 
-  // ── 人員篩選 ──
+  // ── 篩選列 ──
   const personPills=['全部','Vic','Jenny','QbQ','Amber'].map(p=>{
     const val=p==='全部'?'all':p;
     const active=filterPerson===val;
     const dotHtml=p!=='全部'?`<span class="dot dot-${p.toLowerCase()}" style="width:6px;height:6px"></span> `:'';
     return `<button class="freq-pill${active?' active':''}" onclick="setCertFilter('person','${val}')">${dotHtml}${p}</button>`;
   }).join('');
-  html+=`<div class="cert-filter-row"><div class="freq-pills">${personPills}</div></div>`;
+  const statusPills=[{val:'all',lbl:'全部'},{val:'pending',lbl:'⏳ 未使用'},{val:'used',lbl:'✅ 已使用'}].map(({val,lbl})=>{
+    const active=filterStatus===val;
+    return `<button class="freq-pill${active?' active':''}" onclick="setCertFilter('status','${val}')">${lbl}</button>`;
+  }).join('');
+  html+=`<div class="cert-filter-row">
+    <div class="freq-pills">${personPills}</div>
+    <div class="freq-pills">${statusPills}</div>
+    <button class="btn btn-primary" style="padding:6px 14px;font-size:12px;margin-left:auto;flex-shrink:0" onclick="openAddCert()">＋ 新增房券</button>
+  </div>`;
 
-  // ── 使用紀錄 ──
-  html+=`<div>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-      <div class="cert-sec-hd">📋 使用紀錄${filterYear!=='all'?' · '+filterYear+'年':''}</div>
-      <button class="btn btn-primary" style="padding:6px 12px;font-size:12px" onclick="openAddCert()">＋ 新增記錄</button>
-    </div>`;
-
-  if(filtered.length===0){
-    html+=`<div style="text-align:center;padding:32px;color:var(--muted);font-size:13px">
-      尚無記錄，點右側「新增記錄」開始追蹤
-    </div>`;
-  }else{
-    const byYear={};
-    filtered.forEach(c=>{
-      const y=c.checkIn?c.checkIn.slice(0,4):'未知';
-      if(!byYear[y]) byYear[y]=[];
-      byYear[y].push(c);
+  // ── 未使用房券 ──
+  if(filterStatus!=='used'){
+    const sorted=[...pendingFiltered].sort((a,b)=>{
+      if(!a.expiryDate&&!b.expiryDate) return 0;
+      if(!a.expiryDate) return 1;
+      if(!b.expiryDate) return -1;
+      return a.expiryDate.localeCompare(b.expiryDate);
     });
-    Object.keys(byYear).sort((a,b)=>b-a).forEach(yr=>{
-      const list=byYear[yr];
-      list.sort((a,b)=>(b.checkIn||'').localeCompare(a.checkIn||''));
-      const yNights=list.reduce((s,c)=>s+(c.nights||0),0);
-      const yVal=list.reduce((s,c)=>s+(c.cashValue||0),0);
-      if(filterYear==='all'){
-        html+=`<div class="cert-sec-hd" style="margin:10px 0 6px">${yr}年 · ${list.length}筆 · ${yNights}晚 · $${yVal.toLocaleString()}</div>`;
-      }
+    html+=`<div>
+      <div class="cert-sec-hd" style="margin-bottom:8px">🎫 手邊的房券（${sorted.length}張）</div>`;
+    if(sorted.length===0){
+      html+=`<div style="text-align:center;padding:24px;color:var(--muted);font-size:13px">尚無未使用的房券，點右上方「＋ 新增房券」開始記錄</div>`;
+    }else{
       html+=`<div class="cert-card-list">`;
-      list.forEach(c=>{
-        const b=BENEFITS.find(x=>x.id===c.benefitId);
-        const clr=b?(CARD_INFO[b.card]&&CARD_INFO[b.card].clr)||'#6366f1':'#6366f1';
+      sorted.forEach(c=>{
+        const b=c.type==='card_benefit'?BENEFITS.find(x=>x.id===c.benefitId):null;
+        const clr=b?(CARD_INFO[b.card]&&CARD_INFO[b.card].clr)||'#6366f1':c.type==='hotel_voucher'?'#f59e0b':'#6366f1';
         const dotClass=`dot-${(c.person||'vic').toLowerCase()}`;
-        const dateRng=c.checkIn&&c.checkOut?`${c.checkIn} ～ ${c.checkOut}`:(c.checkIn||'—');
-        const nightsStr=c.nights?`${c.nights}晚`:'—';
-        const pointsStr=c.pointsUsed?`${(c.pointsUsed||0).toLocaleString()} pts`:'—';
-        const valStr=c.cashValue?`$${(c.cashValue||0).toLocaleString()}`:'—';
+        const sourceName=c.type==='hotel_voucher'?(c.voucherName||'飯店回饋券'):(c.card||b?.card||'—');
+        const expiryHtml=certExpiryBadgeHtml(c.expiryDate,today);
+        const issuedStr=c.issuedDate?`發放：${c.issuedDate}`:'';
         html+=`<div class="cert-rec">
           <div class="cert-rec-bar" style="background:${clr}"></div>
           <div class="cert-rec-body">
-            <div class="cert-rec-hotel">${c.hotel||'（未填飯店）'}</div>
+            <div class="cert-rec-hotel" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+              <span>${sourceName}</span>${expiryHtml}
+            </div>
             <div class="cert-rec-sub">
               <span class="dot ${dotClass}" style="width:6px;height:6px"></span>${c.person}
-              <span style="opacity:.3">·</span>
-              <span style="color:${clr};font-size:10px;font-weight:700">${c.card||'—'}</span>
-              ${c.location?`<span style="opacity:.3">·</span><span>📍 ${c.location}</span>`:''}
-            </div>
-            <div class="cert-rec-meta">
-              <div class="cert-meta-chip"><div class="cert-meta-lbl">日期</div><div class="cert-meta-val">${dateRng}</div></div>
-              <div class="cert-meta-chip"><div class="cert-meta-lbl">晚數</div><div class="cert-meta-val">${nightsStr}</div></div>
-              <div class="cert-meta-chip"><div class="cert-meta-lbl">兌換點數</div><div class="cert-meta-val">${pointsStr}</div></div>
-              <div class="cert-meta-chip"><div class="cert-meta-lbl">現金估值</div><div class="cert-meta-val" style="color:#fbbf24">${valStr}</div></div>
+              ${c.type==='hotel_voucher'?`<span style="opacity:.3">·</span><span style="color:#f59e0b;font-size:10px;font-weight:700">🏨 飯店回饋</span>`:`<span style="opacity:.3">·</span><span style="color:${clr};font-size:10px;font-weight:700">💳 信用卡年度券</span>`}
+              ${issuedStr?`<span style="opacity:.3">·</span><span>${issuedStr}</span>`:''}
             </div>
             ${c.notes?`<div style="font-size:11px;color:var(--muted);margin-top:6px">備注：${c.notes}</div>`:''}
           </div>
@@ -2547,14 +2608,77 @@ function renderCertView(){
         </div>`;
       });
       html+=`</div>`;
-    });
+    }
+    html+=`</div>`;
   }
-  html+=`</div>`;
+
+  // ── 已使用紀錄 ──
+  if(filterStatus!=='pending'){
+    html+=`<div>
+      <div class="cert-sec-hd" style="margin-bottom:8px">📋 使用紀錄${filterYear!=='all'?' · '+filterYear+'年':''}</div>`;
+    if(usedFiltered.length===0){
+      html+=`<div style="text-align:center;padding:24px;color:var(--muted);font-size:13px">尚無已使用記錄</div>`;
+    }else{
+      const byYear={};
+      usedFiltered.forEach(c=>{
+        const y=c.checkIn?c.checkIn.slice(0,4):'未知';
+        if(!byYear[y]) byYear[y]=[];
+        byYear[y].push(c);
+      });
+      Object.keys(byYear).sort((a,b)=>b-a).forEach(yr=>{
+        const list=byYear[yr];
+        list.sort((a,b)=>(b.checkIn||'').localeCompare(a.checkIn||''));
+        const yNights=list.reduce((s,c)=>s+(c.nights||0),0);
+        const yVal=list.reduce((s,c)=>s+(c.cashValue||0),0);
+        if(filterYear==='all'){
+          html+=`<div class="cert-sec-hd" style="margin:10px 0 6px">${yr}年 · ${list.length}筆 · ${yNights}晚 · $${yVal.toLocaleString()}</div>`;
+        }
+        html+=`<div class="cert-card-list">`;
+        list.forEach(c=>{
+          const b=BENEFITS.find(x=>x.id===c.benefitId);
+          const clr=b?(CARD_INFO[b.card]&&CARD_INFO[b.card].clr)||'#6366f1':c.type==='hotel_voucher'?'#f59e0b':'#6366f1';
+          const dotClass=`dot-${(c.person||'vic').toLowerCase()}`;
+          const dateRng=c.checkIn&&c.checkOut?`${c.checkIn} ～ ${c.checkOut}`:(c.checkIn||'—');
+          const nightsStr=c.nights?`${c.nights}晚`:'—';
+          const pointsStr=c.pointsUsed?`${(c.pointsUsed||0).toLocaleString()} pts`:'—';
+          const valStr=c.cashValue?`$${(c.cashValue||0).toLocaleString()}`:'—';
+          const sourceName=c.type==='hotel_voucher'?(c.voucherName||'飯店回饋券'):(c.card||b?.card||'—');
+          html+=`<div class="cert-rec">
+            <div class="cert-rec-bar" style="background:${clr}"></div>
+            <div class="cert-rec-body">
+              <div class="cert-rec-hotel">${c.hotel||'（未填飯店）'}</div>
+              <div class="cert-rec-sub">
+                <span class="dot ${dotClass}" style="width:6px;height:6px"></span>${c.person}
+                <span style="opacity:.3">·</span>
+                <span style="color:${clr};font-size:10px;font-weight:700">${sourceName}</span>
+                ${c.location?`<span style="opacity:.3">·</span><span>📍 ${c.location}</span>`:''}
+              </div>
+              <div class="cert-rec-meta">
+                <div class="cert-meta-chip"><div class="cert-meta-lbl">日期</div><div class="cert-meta-val">${dateRng}</div></div>
+                <div class="cert-meta-chip"><div class="cert-meta-lbl">晚數</div><div class="cert-meta-val">${nightsStr}</div></div>
+                <div class="cert-meta-chip"><div class="cert-meta-lbl">兌換點數</div><div class="cert-meta-val">${pointsStr}</div></div>
+                <div class="cert-meta-chip"><div class="cert-meta-lbl">現金估值</div><div class="cert-meta-val" style="color:#fbbf24">${valStr}</div></div>
+              </div>
+              ${c.notes?`<div style="font-size:11px;color:var(--muted);margin-top:6px">備注：${c.notes}</div>`:''}
+            </div>
+            <div class="cert-rec-actions">
+              <button class="cert-act-btn" onclick="openEditCert('${c.id}')" title="編輯">✏️</button>
+              <button class="cert-act-btn danger" onclick="deleteCert('${c.id}')" title="刪除">🗑</button>
+            </div>
+          </div>`;
+        });
+        html+=`</div>`;
+      });
+    }
+    html+=`</div>`;
+  }
+
   wrap.innerHTML=html;
   main.appendChild(wrap);
 }
 
-function buildCertHelper(year,allCerts,filterYear){
+function buildCertHelper(year,allCerts,filterYear,today){
+  today=today||new Date().toISOString().slice(0,10);
   const curYear=new Date().getFullYear();
   const yrStr=String(year);
   const yearStart=`${year}-01-01`;
@@ -2661,6 +2785,18 @@ function buildCertHelper(year,allCerts,filterYear){
     </div>
     ${personRowsHtml?`<div class="cert-person-rows">${personRowsHtml}</div>`:''}
     ${statsHtml}
+    ${(()=>{
+      // 即將到期警示
+      const pendingWithExpiry=(allCerts||[]).filter(c=>(c.status||'used')==='pending'&&c.expiryDate);
+      const expSoon=pendingWithExpiry.filter(c=>{const d=certExpiryDaysLeft(c.expiryDate,today);return d!==null&&d>=0&&d<=60;}).sort((a,b)=>a.expiryDate.localeCompare(b.expiryDate));
+      if(!expSoon.length) return '';
+      const tags=expSoon.map(c=>{
+        const src=c.type==='hotel_voucher'?(c.voucherName||'飯店回饋券'):(c.card||'房券');
+        const badge=certExpiryBadgeHtml(c.expiryDate,today);
+        return `<span style="display:inline-flex;align-items:center;gap:5px;font-size:11px">${c.person} · ${src.replace('Amex ','').replace('Chase ','')} ${badge}</span>`;
+      }).join('<span style="color:var(--border);margin:0 4px">|</span>');
+      return `<div style="background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);border-radius:10px;padding:10px 14px;font-size:11px;display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-weight:700;color:#f87171;flex-shrink:0">⚠️ 即將到期</span>${tags}</div>`;
+    })()}
     <div class="cert-insights">${insights.map(i=>`<div class="cert-insight">${i}</div>`).join('')}</div>
   </div>`;
 }
@@ -2672,15 +2808,38 @@ function setCertYear(year){
 
 function setCertFilter(type,val){
   if(type==='year') S.certFilterYear=val;
-  else S.certFilterPerson=val;
+  else if(type==='person') S.certFilterPerson=val;
+  else if(type==='status') S.certFilterStatus=val;
   render();
+}
+
+function setCertType(type){
+  _certType=type;
+  document.getElementById('certTypeCardBtn').classList.toggle('active',type==='card_benefit');
+  document.getElementById('certTypeHotelBtn').classList.toggle('active',type==='hotel_voucher');
+  document.getElementById('certBenefitGroup').style.display=type==='card_benefit'?'':'none';
+  document.getElementById('certVoucherGroup').style.display=type==='hotel_voucher'?'':'none';
+}
+
+function setCertModalStatus(status){
+  _certModalStatus=status;
+  document.getElementById('certStatusPendingBtn').classList.toggle('active',status==='pending');
+  document.getElementById('certStatusUsedBtn').classList.toggle('active',status==='used');
+  document.getElementById('certUsageSection').style.display=status==='used'?'':'none';
 }
 
 function openAddCert(){
   _editCertId=null;
-  document.getElementById('certModalTitle').textContent='🎫 新增房券記錄';
+  _certType='card_benefit';
+  _certModalStatus='pending';
+  document.getElementById('certModalTitle').textContent='🎫 新增房券';
   document.getElementById('certPerson').value='Vic';
+  setCertType('card_benefit');
+  setCertModalStatus('pending');
   updateCertBenefitOptions();
+  document.getElementById('certIssuedDate').value='';
+  document.getElementById('certExpiryDate').value='';
+  document.getElementById('certVoucherName').value='';
   document.getElementById('certHotel').value='';
   document.getElementById('certLocation').value='';
   document.getElementById('certCheckIn').value='';
@@ -2696,12 +2855,19 @@ function openEditCert(id){
   const c=(S.certs||[]).find(x=>x.id===id);
   if(!c) return;
   _editCertId=id;
-  document.getElementById('certModalTitle').textContent='✏️ 編輯房券記錄';
+  _certType=c.type||'card_benefit';
+  _certModalStatus=c.status||'used';
+  document.getElementById('certModalTitle').textContent='✏️ 編輯房券';
   document.getElementById('certPerson').value=c.person||'Vic';
+  setCertType(_certType);
+  setCertModalStatus(_certModalStatus);
   updateCertBenefitOptions();
   setTimeout(()=>{
-    document.getElementById('certBenefit').value=c.benefitId||'';
+    if(_certType==='card_benefit') document.getElementById('certBenefit').value=c.benefitId||'';
+    else document.getElementById('certVoucherName').value=c.voucherName||'';
   },0);
+  document.getElementById('certIssuedDate').value=c.issuedDate||'';
+  document.getElementById('certExpiryDate').value=c.expiryDate||'';
   document.getElementById('certHotel').value=c.hotel||'';
   document.getElementById('certLocation').value=c.location||'';
   document.getElementById('certCheckIn').value=c.checkIn||'';
@@ -2716,7 +2882,7 @@ function openEditCert(id){
 function updateCertBenefitOptions(){
   const person=document.getElementById('certPerson').value;
   const sel=document.getElementById('certBenefit');
-  const opts=BENEFITS.filter(b=>b.nm&&b.person===person);
+  const opts=[...BENEFITS,...getDerivedBenefits()].filter(b=>b.nm&&b.person===person);
   sel.innerHTML=opts.map(b=>`<option value="${b.id}">${b.card} — ${b.name}</option>`).join('');
 }
 
@@ -2731,24 +2897,40 @@ function updateCertNights(){
 
 function saveCert(){
   const person=document.getElementById('certPerson').value;
-  const benefitId=document.getElementById('certBenefit').value;
-  const b=BENEFITS.find(x=>x.id===benefitId);
-  const hotel=document.getElementById('certHotel').value.trim();
-  const location=document.getElementById('certLocation').value.trim();
-  const checkIn=document.getElementById('certCheckIn').value;
-  const checkOut=document.getElementById('certCheckOut').value;
-  const nights=parseInt(document.getElementById('certNights').value)||1;
-  const pointsUsed=parseInt(document.getElementById('certPoints').value)||0;
-  const cashValue=parseFloat(document.getElementById('certValue').value)||0;
+  const type=_certType;
+  const status=_certModalStatus;
+  const issuedDate=document.getElementById('certIssuedDate').value||null;
+  const expiryDate=document.getElementById('certExpiryDate').value||null;
   const notes=document.getElementById('certNotes').value.trim();
 
-  if(!benefitId){alert('請選擇對應福利');return;}
-  if(!hotel){alert('請填入飯店名稱');return;}
-  if(!checkIn){alert('請填入入住日期');return;}
+  let benefitId='',card='',voucherName='';
+  if(type==='card_benefit'){
+    benefitId=document.getElementById('certBenefit').value;
+    const b=[...BENEFITS,...getDerivedBenefits()].find(x=>x.id===benefitId);
+    card=b?b.card:'';
+    if(!benefitId){alert('請選擇對應福利');return;}
+  }else{
+    voucherName=document.getElementById('certVoucherName').value.trim();
+    if(!voucherName){alert('請填入房券名稱');return;}
+  }
+
+  let hotel='',location='',checkIn='',checkOut='',nights=0,pointsUsed=0,cashValue=0;
+  if(status==='used'){
+    hotel=document.getElementById('certHotel').value.trim();
+    location=document.getElementById('certLocation').value.trim();
+    checkIn=document.getElementById('certCheckIn').value;
+    checkOut=document.getElementById('certCheckOut').value;
+    nights=parseInt(document.getElementById('certNights').value)||1;
+    pointsUsed=parseInt(document.getElementById('certPoints').value)||0;
+    cashValue=parseFloat(document.getElementById('certValue').value)||0;
+    if(!hotel){alert('請填入飯店名稱');return;}
+    if(!checkIn){alert('請填入入住日期');return;}
+  }
 
   const rec={
     id:_editCertId||('cert_'+Date.now()),
-    person,card:b?b.card:'',benefitId,
+    type,status,person,card,benefitId,voucherName,
+    issuedDate,expiryDate,
     hotel,location,checkIn,checkOut,nights,pointsUsed,cashValue,notes,
   };
 
