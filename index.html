@@ -152,6 +152,106 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 .cc-card-info-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
 .cc-card-info-val{font-size:12px;font-weight:700;letter-spacing:-.2px}
 
+/* ---- CERT VIEW ---- */
+.cert-wrap{padding:14px 16px;display:flex;flex-direction:column;gap:16px;max-width:900px;margin:0 auto}
+.cert-filter-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.cert-stats{display:flex;gap:8px;flex-wrap:wrap}
+.cert-stat{display:flex;flex-direction:column;gap:2px;padding:10px 14px;background:var(--card);border-radius:10px;border:1px solid var(--border);min-width:90px}
+.cert-stat-val{font-size:20px;font-weight:900;letter-spacing:-.5px;line-height:1}
+.cert-stat-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;font-weight:600;margin-top:2px}
+.cert-status-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+.cert-status-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px}
+.cert-status-item.used{border-color:rgba(34,197,94,.3)}
+.cert-status-info{flex:1;min-width:0}
+.cert-status-card{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cert-status-name{font-size:10px;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cert-status-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;flex-shrink:0}
+.cert-status-badge.done{background:rgba(34,197,94,.15);color:#34d399}
+.cert-status-badge.pending{background:rgba(100,116,139,.12);color:var(--muted)}
+.cert-sec-hd{font-size:11px;font-weight:800;letter-spacing:.5px;color:var(--muted)}
+.cert-card-list{display:flex;flex-direction:column;gap:8px}
+.cert-rec{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;gap:12px;align-items:flex-start;transition:.15s}
+.cert-rec:hover{border-color:rgba(99,102,241,.3)}
+.cert-rec-bar{width:4px;border-radius:4px;align-self:stretch;flex-shrink:0;min-height:44px}
+.cert-rec-body{flex:1;min-width:0}
+.cert-rec-hotel{font-size:14px;font-weight:800;line-height:1.2}
+.cert-rec-sub{font-size:11px;color:var(--muted);margin-top:3px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.cert-rec-meta{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.cert-meta-chip{display:flex;flex-direction:column;gap:1px;padding:4px 8px;background:rgba(255,255,255,.04);border-radius:6px;border:1px solid var(--border)}
+.cert-meta-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;font-weight:600}
+.cert-meta-val{font-size:12px;font-weight:700}
+.cert-rec-actions{display:flex;gap:5px;flex-shrink:0}
+.cert-act-btn{width:28px;height:28px;border-radius:7px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:.15s}
+.cert-act-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
+.cert-act-btn.danger:hover{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);color:#f87171}
+.cert-fg-select{width:100%;padding:10px 13px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:9px;font-size:13px;font-family:inherit;outline:none;transition:.15s;color-scheme:dark}
+.cert-fg-select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(99,102,241,.15)}
+/* ---- MGMT VIEW ---- */
+.mgmt-wrap{padding:14px 16px;display:flex;flex-direction:column;gap:14px;max-width:960px;margin:0 auto}
+.mgmt-topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.mgmt-tab-pills{display:flex;gap:5px;flex-wrap:wrap}
+.mgmt-ptab{display:flex;align-items:center;gap:5px;padding:7px 14px;border-radius:9px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;transition:.15s;white-space:nowrap}
+.mgmt-ptab:hover{background:rgba(255,255,255,.05);color:var(--text)}
+.mgmt-ptab.active{background:rgba(99,102,241,.15);color:var(--accent);border-color:rgba(99,102,241,.3)}
+.mgmt-group-hd{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.mgmt-cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px}
+.mgmt-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:.15s}
+.mgmt-card:hover{border-color:rgba(255,255,255,.12)}
+.mgmt-card.editing{border-color:rgba(99,102,241,.45)}
+.mgmt-banner{height:54px;display:flex;align-items:flex-end;padding:8px 12px;position:relative;overflow:hidden}
+.mgmt-banner-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.68),rgba(0,0,0,.1))}
+.mgmt-banner-name{font-size:13px;font-weight:800;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.8);z-index:1;position:relative;line-height:1.2}
+.mgmt-body{padding:12px 14px}
+.mgmt-body-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.mgmt-person-badge{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:700}
+.mgmt-status{padding:2px 9px;border-radius:5px;font-size:10px;font-weight:700}
+.mgmt-active{background:rgba(34,197,94,.12);color:#34d399}
+.mgmt-closing{background:rgba(245,158,11,.12);color:var(--warn)}
+.mgmt-closed{background:rgba(239,68,68,.12);color:var(--danger)}
+.mgmt-meta-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.mgmt-meta{display:flex;flex-direction:column;gap:2px}
+.mgmt-meta-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;font-weight:600}
+.mgmt-meta-val{font-size:12px;font-weight:700;letter-spacing:-.2px}
+.mgmt-foot{display:flex;gap:6px;align-items:center}
+.mgmt-btn{display:flex;align-items:center;gap:4px;padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-family:inherit;font-size:11px;font-weight:600;transition:.15s;white-space:nowrap}
+.mgmt-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
+.mgmt-btn-edit{border-color:rgba(99,102,241,.3);color:var(--accent)}
+.mgmt-btn-edit:hover{background:rgba(99,102,241,.1);border-color:var(--accent)}
+.mgmt-btn-save{border-color:rgba(99,102,241,.4);color:var(--accent)}
+.mgmt-btn-save:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.mgmt-btn-danger:hover{background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.3);color:var(--danger)}
+.mgmt-edit-panel{padding:13px 14px;border-top:1px solid var(--border);background:rgba(0,0,0,.18)}
+.mgmt-edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.mgmt-edit-field{display:flex;flex-direction:column;gap:4px}
+.mgmt-edit-field label{font-size:9px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.mgmt-edit-field input{padding:7px 10px;background:var(--card);border:1px solid var(--border);border-radius:7px;color:var(--text);font-family:inherit;font-size:12px;outline:none;transition:.15s;color-scheme:dark;width:100%}
+.mgmt-edit-field input:focus{border-color:var(--accent)}
+.mgmt-edit-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+/* ---- CERT HELPER ---- */
+.cert-helper{background:linear-gradient(135deg,rgba(99,102,241,.09),rgba(139,92,246,.05));border:1px solid rgba(99,102,241,.25);border-radius:16px;padding:18px}
+.cert-helper-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:10px;flex-wrap:wrap}
+.cert-helper-title{font-size:14px;font-weight:800;letter-spacing:-.3px;display:flex;align-items:center;gap:6px}
+.cert-person-rows{display:flex;flex-direction:column;gap:9px;margin-bottom:16px}
+.cert-person-row{display:flex;align-items:center;gap:8px;min-height:22px;flex-wrap:wrap}
+.cert-person-name{font-size:12px;font-weight:700;min-width:42px;flex-shrink:0}
+.cert-person-tags{display:flex;gap:5px;flex-wrap:wrap}
+.cert-tag{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:600;cursor:default;white-space:nowrap;transition:.15s}
+.cert-tag-done{background:rgba(34,197,94,.1);color:#34d399;border:1px solid rgba(34,197,94,.25)}
+.cert-tag-pending{background:rgba(100,116,139,.08);color:var(--muted);border:1px solid var(--border)}
+.cert-tag-pending:hover{border-color:rgba(99,102,241,.3);color:var(--text)}
+.cert-helper-stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.cert-h-stat{display:flex;flex-direction:column;gap:2px;padding:8px 14px;background:rgba(0,0,0,.25);border-radius:10px;min-width:72px}
+.cert-h-stat-val{font-size:18px;font-weight:900;letter-spacing:-.5px;line-height:1}
+.cert-h-stat-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:600;margin-top:2px}
+.cert-prog-section{margin-bottom:14px}
+.cert-prog-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.cert-prog-label{font-size:11px;color:var(--muted);font-weight:600}
+.cert-prog-pct{font-size:13px;font-weight:800}
+.cert-prog-track{height:7px;background:rgba(255,255,255,.07);border-radius:5px;overflow:hidden}
+.cert-prog-fill{height:100%;border-radius:5px;transition:width .5s ease}
+.cert-insights{padding-top:12px;border-top:1px solid rgba(255,255,255,.07);display:flex;flex-direction:column;gap:6px}
+.cert-insight{font-size:12px;color:rgba(226,232,240,.75);line-height:1.55;display:flex;align-items:baseline;gap:5px}
+
 /* ---- EMPTY ---- */
 .empty{text-align:center;padding:60px 20px;color:var(--muted)}
 .empty h3{font-size:16px;margin-bottom:6px;color:var(--text)}
@@ -385,6 +485,8 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
     <button class="vt-btn" id="vtCard" onclick="setViewMode('card')">💳 按卡</button>
     <button class="vt-btn" id="vtLog" onclick="setViewMode('log')">📋 紀錄</button>
     <button class="vt-btn" id="vtFee" onclick="setViewMode('fee')">💰 年費</button>
+    <button class="vt-btn" id="vtMgmt" onclick="setViewMode('mgmt')">🗂 持卡</button>
+    <button class="vt-btn" id="vtCert" onclick="setViewMode('cert')">🎫 房券</button>
   </div>
   <button class="icon-btn" onclick="openModal('settings')" title="設定">⚙️</button>
 </div>
@@ -435,6 +537,12 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   <button class="bnav-btn" id="bnavFee" onclick="setViewMode('fee')">
     <span class="bnav-icon">💰</span>年費
   </button>
+  <button class="bnav-btn" id="bnavMgmt" onclick="setViewMode('mgmt')">
+    <span class="bnav-icon">🗂</span>持卡
+  </button>
+  <button class="bnav-btn" id="bnavCert" onclick="setViewMode('cert')">
+    <span class="bnav-icon">🎫</span>房券
+  </button>
   <button class="bnav-btn" id="bnavSettings" onclick="openModal('settings')">
     <span class="bnav-icon">◎</span>設定
   </button>
@@ -483,6 +591,109 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
     <div class="btn-row">
       <button class="btn btn-primary" onclick="confirmComplete()">✅ 確認完成</button>
       <button class="btn btn-secondary" onclick="cancelComplete()">取消</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MGMT ADD MODAL ==================== -->
+<div class="overlay" id="modal-mgmtAdd">
+  <div class="modal" style="width:380px">
+    <div class="modal-head">
+      <h2>➕ 新增持卡記錄</h2>
+      <button class="modal-close" onclick="closeModal('mgmtAdd')">✕</button>
+    </div>
+    <div class="form-group">
+      <label>持卡人</label>
+      <select id="mgmtAddPerson" class="cert-fg-select">
+        <option value="Vic">Vic</option>
+        <option value="Jenny">Jenny</option>
+        <option value="QbQ">QbQ</option>
+        <option value="Amber">Amber</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>卡片名稱</label>
+      <input type="text" id="mgmtAddCard" list="cardNameList" placeholder="例：Amex Gold">
+      <datalist id="cardNameList"></datalist>
+    </div>
+    <div class="form-group">
+      <label>開卡日期</label>
+      <input type="date" id="mgmtAddOpen">
+    </div>
+    <div class="form-group">
+      <label>關卡日期（選填）</label>
+      <input type="date" id="mgmtAddClose">
+    </div>
+    <div class="form-group">
+      <label>備注（選填）</label>
+      <input type="text" id="mgmtAddNotes" placeholder="例：NLL 優惠申請">
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="saveNewMgmtCard()">💾 新增</button>
+      <button class="btn btn-secondary" onclick="closeModal('mgmtAdd')">取消</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== CERT MODAL ==================== -->
+<div class="overlay" id="modal-cert">
+  <div class="modal" style="width:440px">
+    <div class="modal-head">
+      <h2 id="certModalTitle">🎫 新增房券記錄</h2>
+      <button class="modal-close" onclick="closeModal('cert')">✕</button>
+    </div>
+    <div class="form-group">
+      <label>持卡人</label>
+      <select id="certPerson" class="cert-fg-select" onchange="updateCertBenefitOptions()">
+        <option value="Vic">Vic</option>
+        <option value="Jenny">Jenny</option>
+        <option value="QbQ">QbQ</option>
+        <option value="Amber">Amber</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>對應福利（房券來源）</label>
+      <select id="certBenefit" class="cert-fg-select"></select>
+    </div>
+    <div class="form-group">
+      <label>飯店名稱</label>
+      <input type="text" id="certHotel" placeholder="例：Conrad Bali">
+    </div>
+    <div class="form-group">
+      <label>地點</label>
+      <input type="text" id="certLocation" placeholder="例：峇里島, 印尼">
+    </div>
+    <div style="display:flex;gap:10px">
+      <div class="form-group" style="flex:1">
+        <label>入住日期</label>
+        <input type="date" id="certCheckIn" onchange="updateCertNights()">
+      </div>
+      <div class="form-group" style="flex:1">
+        <label>退房日期</label>
+        <input type="date" id="certCheckOut" onchange="updateCertNights()">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>晚數</label>
+      <input type="number" id="certNights" min="1" value="1">
+    </div>
+    <div style="display:flex;gap:10px">
+      <div class="form-group" style="flex:1">
+        <label>兌換點數（選填）</label>
+        <input type="number" id="certPoints" min="0" value="0" placeholder="0">
+      </div>
+      <div class="form-group" style="flex:1">
+        <label>估計現金價值 $</label>
+        <input type="number" id="certValue" min="0" value="0" placeholder="0">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>備注（選填）</label>
+      <input type="text" id="certNotes" placeholder="例：Diamond 升等、加早餐等">
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="saveCert()">💾 儲存</button>
+      <button class="btn btn-secondary" onclick="closeModal('cert')">取消</button>
     </div>
   </div>
 </div>
@@ -748,6 +959,9 @@ const S = {
   logPerson:'all', logCard:'all',
   cardStatus:{},
   completions:{}, scriptUrl:'https://script.google.com/macros/s/AKfycbw4ziYcJQT3mT5IrzuUziu-DpvMRGZLUPWv8uyt7Unr55gnNNsTA_I_vv73uBhVo_no0w/exec', userName:'Vic',
+  certs:[],
+  certFilterYear:'all', certFilterPerson:'all',
+  mgmtPerson:'all',
 };
 
 const openCards = new Set();
@@ -765,6 +979,7 @@ function load(){
     S.scriptUrl=d.scriptUrl||S.scriptUrl;
     S.userName=d.userName||'Vic';
     S.cardStatus=d.cardStatus||{};
+    S.certs=d.certs||[];
   }catch(e){}
   // Pre-populate open dates from Notion if not yet manually set
   Object.entries(CARD_DATES).forEach(([key,openDate])=>{
@@ -779,7 +994,8 @@ function load(){
 function save(){
   localStorage.setItem('fcc_v3',JSON.stringify({
     completions:S.completions,scriptUrl:S.scriptUrl,
-    userName:S.userName,cardStatus:S.cardStatus
+    userName:S.userName,cardStatus:S.cardStatus,
+    certs:S.certs
   }));
 }
 
@@ -837,10 +1053,14 @@ function setViewMode(mode){
   document.getElementById('vtCard').classList.toggle('active',mode==='card');
   document.getElementById('vtLog').classList.toggle('active',mode==='log');
   document.getElementById('vtFee').classList.toggle('active',mode==='fee');
+  document.getElementById('vtMgmt').classList.toggle('active',mode==='mgmt');
+  document.getElementById('vtCert').classList.toggle('active',mode==='cert');
   document.getElementById('bnavPerson').classList.toggle('active',mode==='person');
   document.getElementById('bnavCard').classList.toggle('active',mode==='card');
   document.getElementById('bnavLog').classList.toggle('active',mode==='log');
   document.getElementById('bnavFee').classList.toggle('active',mode==='fee');
+  document.getElementById('bnavMgmt').classList.toggle('active',mode==='mgmt');
+  document.getElementById('bnavCert').classList.toggle('active',mode==='cert');
   render();
 }
 
@@ -1236,10 +1456,14 @@ function render(){
   document.getElementById('vtCard').classList.toggle('active',S.viewMode==='card');
   document.getElementById('vtLog').classList.toggle('active',S.viewMode==='log');
   document.getElementById('vtFee').classList.toggle('active',S.viewMode==='fee');
+  document.getElementById('vtMgmt').classList.toggle('active',S.viewMode==='mgmt');
+  document.getElementById('vtCert').classList.toggle('active',S.viewMode==='cert');
   document.getElementById('bnavPerson').classList.toggle('active',S.viewMode==='person');
   document.getElementById('bnavCard').classList.toggle('active',S.viewMode==='card');
   document.getElementById('bnavLog').classList.toggle('active',S.viewMode==='log');
   document.getElementById('bnavFee').classList.toggle('active',S.viewMode==='fee');
+  document.getElementById('bnavMgmt').classList.toggle('active',S.viewMode==='mgmt');
+  document.getElementById('bnavCert').classList.toggle('active',S.viewMode==='cert');
   buildPersonTabs();
   buildFreqPills();
   buildAnnounceBar();
@@ -1269,6 +1493,10 @@ function render(){
     renderLogView();
   }else if(S.viewMode==='fee'){
     renderFeeView();
+  }else if(S.viewMode==='mgmt'){
+    renderMgmtView();
+  }else if(S.viewMode==='cert'){
+    renderCertView();
   }else{
     renderPersonView(visible);
   }
@@ -1956,6 +2184,535 @@ function buildLogHTML(allEvents){
 
 function selectDay(ds){
   S.selectedDay=(S.selectedDay===ds)?null:ds;
+  render();
+}
+
+// ================================================================
+// MGMT (持卡管理) VIEW
+// ================================================================
+let _mgmtEditKey=null;
+const PERSON_ORDER=['Vic','Jenny','QbQ','Amber'];
+
+function renderMgmtView(){
+  const main=document.getElementById('main');
+  main.innerHTML='';
+  const fp=S.mgmtPerson||'all';
+  const today=new Date().toISOString().slice(0,10);
+
+  // Collect all unique person::card entries from BENEFITS + manual cardStatus
+  const seen=new Set();
+  const allEntries=[];
+  BENEFITS.forEach(b=>{
+    const k=`${b.person}::${b.card}`;
+    if(!seen.has(k)){seen.add(k);allEntries.push({person:b.person,card:b.card,key:k});}
+  });
+  Object.keys(S.cardStatus).forEach(k=>{
+    if(!seen.has(k)){
+      const idx=k.indexOf('::');
+      if(idx>0){const person=k.slice(0,idx),card=k.slice(idx+2);seen.add(k);allEntries.push({person,card,key:k});}
+    }
+  });
+
+  const filtered=fp==='all'?allEntries:allEntries.filter(e=>e.person===fp);
+
+  const wrap=document.createElement('div');
+  wrap.className='mgmt-wrap';
+
+  // ── 頂部：人員分頁 + 新增按鈕 ──
+  const personTabs=['all','Vic','Jenny','QbQ','Amber'].map(p=>{
+    const label=p==='all'?'全部':p;
+    const active=fp===p;
+    const dotHtml=p!=='all'?`<span class="dot dot-${p.toLowerCase()}" style="width:7px;height:7px"></span>`:'';
+    const count=p==='all'?allEntries.length:allEntries.filter(e=>e.person===p).length;
+    return `<button class="mgmt-ptab${active?' active':''}" onclick="setMgmtPerson('${p}')">${dotHtml}${label} <span style="font-size:10px;opacity:.6">${count}</span></button>`;
+  }).join('');
+
+  let html=`<div class="mgmt-topbar">
+    <div class="mgmt-tab-pills">${personTabs}</div>
+    <button class="btn btn-primary" style="padding:7px 14px;font-size:12px;flex-shrink:0" onclick="openMgmtAdd()">＋ 新增持卡記錄</button>
+  </div>`;
+
+  if(filtered.length===0){
+    html+=`<div style="text-align:center;padding:40px;color:var(--muted)">此人名下無持卡記錄</div>`;
+    wrap.innerHTML=html;main.appendChild(wrap);return;
+  }
+
+  if(fp==='all'){
+    // 依人員分群
+    PERSON_ORDER.forEach(person=>{
+      const list=filtered.filter(e=>e.person===person);
+      if(!list.length) return;
+      const dotCls=`dot-${person.toLowerCase()}`;
+      const activeCount=list.filter(e=>{
+        const st=S.cardStatus[e.key]||{};
+        return !(st.closeDate&&st.closeDate<=today);
+      }).length;
+      html+=`<div>
+        <div class="mgmt-group-hd">
+          <span class="dot ${dotCls}"></span>${person}
+          <span style="font-weight:500;letter-spacing:0;font-size:10px">${activeCount}張使用中 / 共${list.length}張</span>
+        </div>
+        <div class="mgmt-cards-grid">`;
+      list.forEach(e=>{html+=buildMgmtCard(e,today);});
+      html+=`</div></div>`;
+    });
+  }else{
+    html+=`<div class="mgmt-cards-grid">`;
+    filtered.forEach(e=>{html+=buildMgmtCard(e,today);});
+    html+=`</div>`;
+  }
+
+  wrap.innerHTML=html;
+  main.appendChild(wrap);
+}
+
+function buildMgmtCard({person,card,key},today){
+  const st=S.cardStatus[key]||{};
+  const info=CARD_INFO[card]||{};
+  const grad=info.grad||'linear-gradient(135deg,#1e1e2e,#2d2d44)';
+  const fee=info.fee??null;
+  const dotCls=`dot-${person.toLowerCase()}`;
+  const safeKey=key.replace(/[^a-z0-9]/gi,'-');
+
+  // 狀態
+  let statusCls='mgmt-active',statusTxt='使用中';
+  if(st.closeDate){
+    if(st.closeDate<=today){statusCls='mgmt-closed';statusTxt='已關卡';}
+    else{statusCls='mgmt-closing';statusTxt=`${st.closeDate.slice(5).replace('-','/')} 關卡`;}
+  }
+
+  // 持卡時間
+  let heldStr='—';
+  if(st.openDate){
+    const open=new Date(st.openDate+'T00:00:00');
+    const end=st.closeDate&&st.closeDate<=today?new Date(st.closeDate+'T00:00:00'):new Date();
+    const months=Math.max(0,(end.getFullYear()-open.getFullYear())*12+(end.getMonth()-open.getMonth()));
+    if(months>0){const yr=Math.floor(months/12),mo=months%12;heldStr=yr>0&&mo>0?`${yr}年${mo}月`:yr>0?`${yr}年`:`${mo}月`;}
+  }
+
+  // 年費資訊
+  const feeStr=fee===0?'免年費':fee?`$${fee.toLocaleString()}/年`:'—';
+  const feeMonth=st.openDate&&fee?`${parseInt(st.openDate.slice(5,7))}月`:'';
+
+  const isEditing=_mgmtEditKey===key;
+
+  const editPanel=isEditing?`<div class="mgmt-edit-panel">
+    <div class="mgmt-edit-grid">
+      <div class="mgmt-edit-field">
+        <label>開卡日期</label>
+        <input type="date" id="mgmt-open-${safeKey}" value="${st.openDate||''}">
+      </div>
+      <div class="mgmt-edit-field">
+        <label>關卡日期（空白＝仍持有）</label>
+        <input type="date" id="mgmt-close-${safeKey}" value="${st.closeDate||''}">
+      </div>
+    </div>
+    <div class="mgmt-edit-field" style="margin-bottom:0">
+      <label>備注</label>
+      <input type="text" id="mgmt-notes-${safeKey}" value="${(st.notes||'').replace(/"/g,'&quot;')}" placeholder="選填">
+    </div>
+    <div class="mgmt-edit-actions">
+      <button class="mgmt-btn mgmt-btn-save" onclick="saveMgmtCard('${key}')">💾 儲存</button>
+      <button class="mgmt-btn" onclick="toggleMgmtEdit(null)">取消</button>
+      <button class="mgmt-btn mgmt-btn-danger" onclick="closeMgmtToday('${key}')">🔴 今天關卡</button>
+    </div>
+  </div>`:'';
+
+  return `<div class="mgmt-card${isEditing?' editing':''}">
+    <div class="mgmt-banner" style="background:${grad}">
+      <div class="mgmt-banner-overlay"></div>
+      <div class="mgmt-banner-name">${card}</div>
+    </div>
+    <div class="mgmt-body">
+      <div class="mgmt-body-top">
+        <div class="mgmt-person-badge"><span class="dot ${dotCls}"></span>${person}</div>
+        <span class="mgmt-status ${statusCls}">${statusTxt}</span>
+      </div>
+      <div class="mgmt-meta-row">
+        <div class="mgmt-meta"><div class="mgmt-meta-lbl">開卡日</div><div class="mgmt-meta-val">${st.openDate||'—'}</div></div>
+        ${st.closeDate?`<div class="mgmt-meta"><div class="mgmt-meta-lbl">關卡日</div><div class="mgmt-meta-val">${st.closeDate}</div></div>`:''}
+        <div class="mgmt-meta"><div class="mgmt-meta-lbl">持卡時間</div><div class="mgmt-meta-val">${heldStr}</div></div>
+        <div class="mgmt-meta"><div class="mgmt-meta-lbl">年費</div><div class="mgmt-meta-val">${feeStr}${feeMonth?` · ${feeMonth}`:''}</div></div>
+      </div>
+      ${st.notes?`<div style="font-size:11px;color:var(--muted);margin-bottom:10px">📝 ${st.notes}</div>`:''}
+      <div class="mgmt-foot">
+        <button class="mgmt-btn mgmt-btn-edit" onclick="toggleMgmtEdit('${key}')">
+          ${isEditing?'✕ 收合':'✏️ 編輯日期'}
+        </button>
+      </div>
+    </div>
+    ${editPanel}
+  </div>`;
+}
+
+function setMgmtPerson(p){S.mgmtPerson=p;_mgmtEditKey=null;render();}
+
+function toggleMgmtEdit(key){
+  _mgmtEditKey=(_mgmtEditKey===key)?null:key;
+  render();
+}
+
+function saveMgmtCard(key){
+  const safeKey=key.replace(/[^a-z0-9]/gi,'-');
+  const openDate=document.getElementById('mgmt-open-'+safeKey).value||null;
+  const closeDate=document.getElementById('mgmt-close-'+safeKey).value||null;
+  const notes=document.getElementById('mgmt-notes-'+safeKey).value.trim();
+  const val={openDate,closeDate,notes};
+  S.cardStatus[key]=val;
+  save();pushCardStatusToSheet(key,val);
+  _mgmtEditKey=null;render();
+}
+
+function closeMgmtToday(key){
+  const today=new Date().toISOString().slice(0,10);
+  S.cardStatus[key]=Object.assign({},S.cardStatus[key]||{},{closeDate:today});
+  save();pushCardStatusToSheet(key,S.cardStatus[key]);
+  _mgmtEditKey=null;render();
+}
+
+function openMgmtAdd(){
+  const dl=document.getElementById('cardNameList');
+  if(dl) dl.innerHTML=Object.keys(CARD_INFO).map(k=>`<option value="${k}">`).join('');
+  document.getElementById('mgmtAddPerson').value=S.mgmtPerson!=='all'?S.mgmtPerson:'Vic';
+  document.getElementById('mgmtAddCard').value='';
+  document.getElementById('mgmtAddOpen').value='';
+  document.getElementById('mgmtAddClose').value='';
+  document.getElementById('mgmtAddNotes').value='';
+  openModal('mgmtAdd');
+}
+
+function saveNewMgmtCard(){
+  const person=document.getElementById('mgmtAddPerson').value;
+  const card=document.getElementById('mgmtAddCard').value.trim();
+  const openDate=document.getElementById('mgmtAddOpen').value||null;
+  const closeDate=document.getElementById('mgmtAddClose').value||null;
+  const notes=document.getElementById('mgmtAddNotes').value.trim();
+  if(!card){alert('請填入卡片名稱');return;}
+  const key=`${person}::${card}`;
+  S.cardStatus[key]=Object.assign({},S.cardStatus[key]||{},{openDate,closeDate,notes});
+  save();pushCardStatusToSheet(key,S.cardStatus[key]);
+  closeModal('mgmtAdd');render();
+}
+
+// ================================================================
+// CERT (房券) VIEW
+// ================================================================
+let _editCertId=null;
+
+function renderCertView(){
+  const main=document.getElementById('main');
+  main.innerHTML='';
+  const filterYear=S.certFilterYear||'all';
+  const filterPerson=S.certFilterPerson||'all';
+  const allCerts=S.certs||[];
+  const curYear=new Date().getFullYear();
+  const helperYear=filterYear==='all'?curYear:parseInt(filterYear);
+
+  const filtered=allCerts.filter(c=>{
+    if(filterPerson!=='all'&&c.person!==filterPerson) return false;
+    if(filterYear!=='all'){
+      const yr=c.checkIn?c.checkIn.slice(0,4):'';
+      if(yr!==String(filterYear)) return false;
+    }
+    return true;
+  });
+
+  const wrap=document.createElement('div');
+  wrap.className='cert-wrap';
+
+  // ── 摘要小幫手 ──
+  let html=buildCertHelper(helperYear,allCerts,filterYear);
+
+  // ── 人員篩選 ──
+  const personPills=['全部','Vic','Jenny','QbQ','Amber'].map(p=>{
+    const val=p==='全部'?'all':p;
+    const active=filterPerson===val;
+    const dotHtml=p!=='全部'?`<span class="dot dot-${p.toLowerCase()}" style="width:6px;height:6px"></span> `:'';
+    return `<button class="freq-pill${active?' active':''}" onclick="setCertFilter('person','${val}')">${dotHtml}${p}</button>`;
+  }).join('');
+  html+=`<div class="cert-filter-row"><div class="freq-pills">${personPills}</div></div>`;
+
+  // ── 使用紀錄 ──
+  html+=`<div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <div class="cert-sec-hd">📋 使用紀錄${filterYear!=='all'?' · '+filterYear+'年':''}</div>
+      <button class="btn btn-primary" style="padding:6px 12px;font-size:12px" onclick="openAddCert()">＋ 新增記錄</button>
+    </div>`;
+
+  if(filtered.length===0){
+    html+=`<div style="text-align:center;padding:32px;color:var(--muted);font-size:13px">
+      尚無記錄，點右側「新增記錄」開始追蹤
+    </div>`;
+  }else{
+    const byYear={};
+    filtered.forEach(c=>{
+      const y=c.checkIn?c.checkIn.slice(0,4):'未知';
+      if(!byYear[y]) byYear[y]=[];
+      byYear[y].push(c);
+    });
+    Object.keys(byYear).sort((a,b)=>b-a).forEach(yr=>{
+      const list=byYear[yr];
+      list.sort((a,b)=>(b.checkIn||'').localeCompare(a.checkIn||''));
+      const yNights=list.reduce((s,c)=>s+(c.nights||0),0);
+      const yVal=list.reduce((s,c)=>s+(c.cashValue||0),0);
+      if(filterYear==='all'){
+        html+=`<div class="cert-sec-hd" style="margin:10px 0 6px">${yr}年 · ${list.length}筆 · ${yNights}晚 · $${yVal.toLocaleString()}</div>`;
+      }
+      html+=`<div class="cert-card-list">`;
+      list.forEach(c=>{
+        const b=BENEFITS.find(x=>x.id===c.benefitId);
+        const clr=b?(CARD_INFO[b.card]&&CARD_INFO[b.card].clr)||'#6366f1':'#6366f1';
+        const dotClass=`dot-${(c.person||'vic').toLowerCase()}`;
+        const dateRng=c.checkIn&&c.checkOut?`${c.checkIn} ～ ${c.checkOut}`:(c.checkIn||'—');
+        const nightsStr=c.nights?`${c.nights}晚`:'—';
+        const pointsStr=c.pointsUsed?`${(c.pointsUsed||0).toLocaleString()} pts`:'—';
+        const valStr=c.cashValue?`$${(c.cashValue||0).toLocaleString()}`:'—';
+        html+=`<div class="cert-rec">
+          <div class="cert-rec-bar" style="background:${clr}"></div>
+          <div class="cert-rec-body">
+            <div class="cert-rec-hotel">${c.hotel||'（未填飯店）'}</div>
+            <div class="cert-rec-sub">
+              <span class="dot ${dotClass}" style="width:6px;height:6px"></span>${c.person}
+              <span style="opacity:.3">·</span>
+              <span style="color:${clr};font-size:10px;font-weight:700">${c.card||'—'}</span>
+              ${c.location?`<span style="opacity:.3">·</span><span>📍 ${c.location}</span>`:''}
+            </div>
+            <div class="cert-rec-meta">
+              <div class="cert-meta-chip"><div class="cert-meta-lbl">日期</div><div class="cert-meta-val">${dateRng}</div></div>
+              <div class="cert-meta-chip"><div class="cert-meta-lbl">晚數</div><div class="cert-meta-val">${nightsStr}</div></div>
+              <div class="cert-meta-chip"><div class="cert-meta-lbl">兌換點數</div><div class="cert-meta-val">${pointsStr}</div></div>
+              <div class="cert-meta-chip"><div class="cert-meta-lbl">現金估值</div><div class="cert-meta-val" style="color:#fbbf24">${valStr}</div></div>
+            </div>
+            ${c.notes?`<div style="font-size:11px;color:var(--muted);margin-top:6px">備注：${c.notes}</div>`:''}
+          </div>
+          <div class="cert-rec-actions">
+            <button class="cert-act-btn" onclick="openEditCert('${c.id}')" title="編輯">✏️</button>
+            <button class="cert-act-btn danger" onclick="deleteCert('${c.id}')" title="刪除">🗑</button>
+          </div>
+        </div>`;
+      });
+      html+=`</div>`;
+    });
+  }
+  html+=`</div>`;
+  wrap.innerHTML=html;
+  main.appendChild(wrap);
+}
+
+function buildCertHelper(year,allCerts,filterYear){
+  const curYear=new Date().getFullYear();
+  const yrStr=String(year);
+  const yearStart=`${year}-01-01`;
+  const yearEnd=`${year}-12-31`;
+
+  // 這個年度有哪些 nm 福利（判斷該年持卡狀態）
+  const nmBenefits=BENEFITS.filter(b=>{
+    if(!b.nm) return false;
+    const st=S.cardStatus[`${b.person}::${b.card}`];
+    if(!st) return true;
+    if(st.openDate&&st.openDate>yearEnd) return false;
+    if(st.closeDate&&st.closeDate<yearStart) return false;
+    return true;
+  });
+
+  const totalHeld=nmBenefits.length;
+  const yearCerts=allCerts.filter(c=>c.checkIn&&c.checkIn.startsWith(yrStr));
+  const usedBenefitIds=new Set(yearCerts.map(c=>c.benefitId));
+  const usedCount=nmBenefits.filter(b=>usedBenefitIds.has(b.id)).length;
+  const unusedCount=totalHeld-usedCount;
+  const totalNights=yearCerts.reduce((s,c)=>s+(c.nights||0),0);
+  const totalValue=yearCerts.reduce((s,c)=>s+(c.cashValue||0),0);
+  const usagePct=totalHeld>0?Math.round(usedCount/totalHeld*100):0;
+  const usageClr=usagePct>=100?'var(--done)':usagePct>=50?'var(--warn)':'var(--danger)';
+  const bestCert=yearCerts.length>0?yearCerts.reduce((b,c)=>(c.cashValue||0)>(b.cashValue||0)?c:b):null;
+
+  // 年度切換 tabs
+  const yearSet=new Set(allCerts.map(c=>c.checkIn?c.checkIn.slice(0,4):'').filter(Boolean));
+  [String(curYear-1),String(curYear)].forEach(y=>yearSet.add(y));
+  const years=[...yearSet].sort((a,b)=>a-b);
+  const yearTabs=years.map(y=>`<button class="freq-pill${parseInt(y)===year&&filterYear!=='all'?' active':''}" onclick="setCertYear(${y})">${y}</button>`).join('');
+  const allTab=`<button class="freq-pill${filterYear==='all'?' active':''}" onclick="setCertYear('all')">全部</button>`;
+
+  // 依人分組展示持卡福利
+  const byPerson={};
+  nmBenefits.forEach(b=>{
+    if(!byPerson[b.person]) byPerson[b.person]=[];
+    byPerson[b.person].push(b);
+  });
+  const personOrder=['Vic','Jenny','QbQ','Amber'];
+  let personRowsHtml='';
+  personOrder.forEach(person=>{
+    const benefits=byPerson[person];
+    if(!benefits||!benefits.length) return;
+    const dotCls=`dot-${person.toLowerCase()}`;
+    const tags=benefits.map(b=>{
+      const used=usedBenefitIds.has(b.id);
+      const rec=yearCerts.find(c=>c.benefitId===b.id);
+      const hint=rec?` title="${rec.hotel||''}":`:'';
+      const label=b.card.replace('Amex ','').replace('Chase ','').replace('BoA ','');
+      return `<span class="cert-tag ${used?'cert-tag-done':'cert-tag-pending'}"${hint}>${used?'✅':'⏳'} ${label}</span>`;
+    }).join('');
+    personRowsHtml+=`<div class="cert-person-row">
+      <span class="dot ${dotCls}" style="width:7px;height:7px;flex-shrink:0"></span>
+      <span class="cert-person-name">${person}</span>
+      <div class="cert-person-tags">${tags}</div>
+    </div>`;
+  });
+
+  // 洞察文字
+  const insights=[];
+  if(totalHeld===0){
+    insights.push('此年度無持有年度免費房晚福利。');
+  }else if(usedCount===totalHeld){
+    insights.push('🎉 本年度所有房券均已使用，完美！');
+  }else if(year<curYear){
+    insights.push(`📌 ${year}年有 ${unusedCount} 張房券未使用（已過期）。`);
+  }else if(year===curYear){
+    const urgency=unusedCount>3?'⚠️':'⏳';
+    insights.push(`${urgency} 本年還有 <strong>${unusedCount} 張</strong>房券尚未安排，記得在年底前使用。`);
+  }else{
+    insights.push(`🗓 ${year}年尚未開始，目前預計持有 ${totalHeld} 張房券。`);
+  }
+  if(bestCert){
+    const b=BENEFITS.find(x=>x.id===bestCert.benefitId);
+    const cName=b?b.card.replace('Amex ','').replace('Chase ',''):bestCert.card||'';
+    insights.push(`💡 最高兌換：<strong>${bestCert.hotel}</strong>（${cName}，$${(bestCert.cashValue||0).toLocaleString()}）`);
+  }
+  if(totalNights>0&&totalValue>0){
+    const perNight=Math.round(totalValue/totalNights);
+    insights.push(`📊 平均每晚兌換 $${perNight.toLocaleString()}，共 ${totalNights} 晚、累積 $${totalValue.toLocaleString()}`);
+  }
+
+  const statsHtml=totalHeld>0?`
+  <div class="cert-helper-stats">
+    <div class="cert-h-stat"><span class="cert-h-stat-val">${totalHeld}</span><span class="cert-h-stat-lbl">持有房券</span></div>
+    <div class="cert-h-stat"><span class="cert-h-stat-val" style="color:var(--done)">${usedCount}</span><span class="cert-h-stat-lbl">已使用</span></div>
+    <div class="cert-h-stat"><span class="cert-h-stat-val" style="color:${unusedCount>0?'var(--warn)':'var(--muted)'}">${unusedCount}</span><span class="cert-h-stat-lbl">未使用</span></div>
+    <div class="cert-h-stat"><span class="cert-h-stat-val">${totalNights}</span><span class="cert-h-stat-lbl">總晚數</span></div>
+    <div class="cert-h-stat"><span class="cert-h-stat-val" style="color:#fbbf24">$${totalValue.toLocaleString()}</span><span class="cert-h-stat-lbl">兌換估值</span></div>
+  </div>
+  <div class="cert-prog-section">
+    <div class="cert-prog-row">
+      <span class="cert-prog-label">使用率</span>
+      <span class="cert-prog-pct" style="color:${usageClr}">${usagePct}%（${usedCount}/${totalHeld}）</span>
+    </div>
+    <div class="cert-prog-track"><div class="cert-prog-fill" style="width:${usagePct}%;background:${usageClr}"></div></div>
+  </div>`:'';
+
+  return `<div class="cert-helper">
+    <div class="cert-helper-head">
+      <div class="cert-helper-title">🤖 ${filterYear==='all'?curYear+'年（今年）':year+'年'} 房券摘要</div>
+      <div class="freq-pills" style="gap:3px">${allTab}${yearTabs}</div>
+    </div>
+    ${personRowsHtml?`<div class="cert-person-rows">${personRowsHtml}</div>`:''}
+    ${statsHtml}
+    <div class="cert-insights">${insights.map(i=>`<div class="cert-insight">${i}</div>`).join('')}</div>
+  </div>`;
+}
+
+function setCertYear(year){
+  S.certFilterYear=year==='all'?'all':String(year);
+  render();
+}
+
+function setCertFilter(type,val){
+  if(type==='year') S.certFilterYear=val;
+  else S.certFilterPerson=val;
+  render();
+}
+
+function openAddCert(){
+  _editCertId=null;
+  document.getElementById('certModalTitle').textContent='🎫 新增房券記錄';
+  document.getElementById('certPerson').value='Vic';
+  updateCertBenefitOptions();
+  document.getElementById('certHotel').value='';
+  document.getElementById('certLocation').value='';
+  document.getElementById('certCheckIn').value='';
+  document.getElementById('certCheckOut').value='';
+  document.getElementById('certNights').value='1';
+  document.getElementById('certPoints').value='0';
+  document.getElementById('certValue').value='0';
+  document.getElementById('certNotes').value='';
+  openModal('cert');
+}
+
+function openEditCert(id){
+  const c=(S.certs||[]).find(x=>x.id===id);
+  if(!c) return;
+  _editCertId=id;
+  document.getElementById('certModalTitle').textContent='✏️ 編輯房券記錄';
+  document.getElementById('certPerson').value=c.person||'Vic';
+  updateCertBenefitOptions();
+  setTimeout(()=>{
+    document.getElementById('certBenefit').value=c.benefitId||'';
+  },0);
+  document.getElementById('certHotel').value=c.hotel||'';
+  document.getElementById('certLocation').value=c.location||'';
+  document.getElementById('certCheckIn').value=c.checkIn||'';
+  document.getElementById('certCheckOut').value=c.checkOut||'';
+  document.getElementById('certNights').value=c.nights||1;
+  document.getElementById('certPoints').value=c.pointsUsed||0;
+  document.getElementById('certValue').value=c.cashValue||0;
+  document.getElementById('certNotes').value=c.notes||'';
+  openModal('cert');
+}
+
+function updateCertBenefitOptions(){
+  const person=document.getElementById('certPerson').value;
+  const sel=document.getElementById('certBenefit');
+  const opts=BENEFITS.filter(b=>b.nm&&b.person===person);
+  sel.innerHTML=opts.map(b=>`<option value="${b.id}">${b.card} — ${b.name}</option>`).join('');
+}
+
+function updateCertNights(){
+  const ci=document.getElementById('certCheckIn').value;
+  const co=document.getElementById('certCheckOut').value;
+  if(ci&&co){
+    const diff=Math.round((new Date(co)-new Date(ci))/86400000);
+    if(diff>0) document.getElementById('certNights').value=diff;
+  }
+}
+
+function saveCert(){
+  const person=document.getElementById('certPerson').value;
+  const benefitId=document.getElementById('certBenefit').value;
+  const b=BENEFITS.find(x=>x.id===benefitId);
+  const hotel=document.getElementById('certHotel').value.trim();
+  const location=document.getElementById('certLocation').value.trim();
+  const checkIn=document.getElementById('certCheckIn').value;
+  const checkOut=document.getElementById('certCheckOut').value;
+  const nights=parseInt(document.getElementById('certNights').value)||1;
+  const pointsUsed=parseInt(document.getElementById('certPoints').value)||0;
+  const cashValue=parseFloat(document.getElementById('certValue').value)||0;
+  const notes=document.getElementById('certNotes').value.trim();
+
+  if(!benefitId){alert('請選擇對應福利');return;}
+  if(!hotel){alert('請填入飯店名稱');return;}
+  if(!checkIn){alert('請填入入住日期');return;}
+
+  const rec={
+    id:_editCertId||('cert_'+Date.now()),
+    person,card:b?b.card:'',benefitId,
+    hotel,location,checkIn,checkOut,nights,pointsUsed,cashValue,notes,
+  };
+
+  if(!S.certs) S.certs=[];
+  if(_editCertId){
+    const idx=S.certs.findIndex(x=>x.id===_editCertId);
+    if(idx>=0) S.certs[idx]=rec;
+  }else{
+    S.certs.push(rec);
+  }
+  save();
+  closeModal('cert');
+  render();
+}
+
+function deleteCert(id){
+  if(!confirm('確定要刪除這筆房券記錄？')) return;
+  S.certs=(S.certs||[]).filter(x=>x.id!==id);
+  save();
   render();
 }
 
