@@ -1162,7 +1162,7 @@ let _pendingId=null;
 
 function toggle(id,e){
   e.stopPropagation();
-  const b=BENEFITS.find(x=>x.id===id);if(!b)return;
+  const b=[...BENEFITS,...getDerivedBenefits()].find(x=>x.id===id);if(!b)return;
   const k=ckey(b);
   if(S.completions[k]){
     // Uncomplete: direct (log view uses logUndo with confirm)
@@ -1213,7 +1213,7 @@ function toggle(id,e){
 
 function confirmComplete(){
   if(!_pendingId)return;
-  const b=BENEFITS.find(x=>x.id===_pendingId);if(!b)return;
+  const b=[...BENEFITS,...getDerivedBenefits()].find(x=>x.id===_pendingId);if(!b)return;
   const k=ckey(b);
   const dateVal=document.getElementById('completeDateInput').value;
   const byVal=document.getElementById('completePersonInput').value.trim()||S.userName;
@@ -1996,7 +1996,7 @@ function buildEventData(){
   const events=[];
   Object.entries(S.completions).forEach(([key,val])=>{
     const [bId]=key.split('__');
-    const b=BENEFITS.find(x=>x.id===bId);
+    const b=[...BENEFITS,...getDerivedBenefits()].find(x=>x.id===bId);
     if(!b)return;
     if(pf!=='all'&&b.person!==pf)return;
     if(cf!=='all'&&b.card!==cf)return;
@@ -2015,7 +2015,7 @@ function setLogCard(c){
 function logUndo(key,bId,e){
   e.stopPropagation();
   if(!S.completions[key])return;
-  const b=BENEFITS.find(x=>x.id===bId);
+  const b=[...BENEFITS,...getDerivedBenefits()].find(x=>x.id===bId);
   const label=b?b.name:bId;
   if(!confirm(`確定取消「${label}」的完成紀錄？`))return;
   delete S.completions[key];
@@ -2176,7 +2176,7 @@ function buildLogHTML(allEvents){
   const allRaw=[];
   Object.entries(S.completions).forEach(([key,val])=>{
     const [bId]=key.split('__');
-    const b=BENEFITS.find(x=>x.id===bId);
+    const b=[...BENEFITS,...getDerivedBenefits()].find(x=>x.id===bId);
     if(b) allRaw.push(b);
   });
   const persons=[...new Set(allRaw.map(b=>b.person))].sort();
